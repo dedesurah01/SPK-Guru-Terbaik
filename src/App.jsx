@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { SpkProvider } from './context/SpkContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
+import LoginView from './views/LoginView';
 import DashboardView from './views/DashboardView';
 import DataGuruView from './views/DataGuruView';
 import KriteriaBobotView from './views/KriteriaBobotView';
@@ -10,8 +12,14 @@ import PerhitunganSawView from './views/PerhitunganSawView';
 import HasilLaporanView from './views/HasilLaporanView';
 
 function AppContent() {
+  const { isAuthenticated } = useAuth();
   const [activeModule, setActiveModule] = useState('dashboard');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+
+  // Tampilkan halaman login jika belum terautentikasi
+  if (!isAuthenticated) {
+    return <LoginView />;
+  }
 
   // Router dispatcher
   const renderCurrentModule = () => {
@@ -36,7 +44,7 @@ function AppContent() {
   return (
     <div className="app-layout">
       {/* Mobile Backdrop Overlay */}
-      <div 
+      <div
         className={`sidebar-overlay ${isMobileSidebarOpen ? 'active' : ''}`}
         onClick={() => setIsMobileSidebarOpen(false)}
       />
@@ -66,8 +74,10 @@ function AppContent() {
 
 export default function App() {
   return (
-    <SpkProvider>
-      <AppContent />
-    </SpkProvider>
+    <AuthProvider>
+      <SpkProvider>
+        <AppContent />
+      </SpkProvider>
+    </AuthProvider>
   );
 }

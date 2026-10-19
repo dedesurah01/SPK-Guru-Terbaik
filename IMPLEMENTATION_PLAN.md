@@ -43,6 +43,17 @@
 **Validasi:** checklist PRD, uji alur utama, tidak ada error build yang diketahui.
 **Gate:** persetujuan eksplisit sebelum pekerjaan tambahan atau rilis.
 
+## Phase 7 — Dokumentasi dan Panduan Pengguna (Serah Terima)
+**Keluaran:** Panduan Pengguna (`USER_MANUAL.md`), Penjelasan Algoritma SAW (`SAW_EXPLANATION.md`), dan Dokumentasi Serah Terima (`README.md`).
+**Validasi:** kelengkapan panduan untuk 6 modul, verifikasi kesesuaian matematis SAW dengan PRD, dan panduan instalasi/operasional terverifikasi.
+**Gate:** persetujuan eksplisit pengguna untuk penyelesaian akhir proyek.
+
+## Phase 8 - authentication 
+**Keluaran:** login dan logout untuk pengguna.
+**Validasi:** login dan logout berfungsi.
+**Gate:** persetujuan eksplisit sebelum pekerjaan tambahan atau rilis.
+
+
 ## Format Laporan Tiap Fase
 1. Fase dan tujuan.
 2. File yang dibuat/diubah.
