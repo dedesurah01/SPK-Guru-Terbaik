@@ -10,7 +10,8 @@ import {
   CheckCircle2, 
   AlertCircle,
   UserCheck,
-  GraduationCap
+  GraduationCap,
+  Calendar
 } from 'lucide-react';
 import { useSpk } from '../context/SpkContext';
 import Modal from '../components/Modal';
@@ -34,7 +35,8 @@ export default function DataGuruView() {
     nama: '',
     mapel: '',
     pengalaman: '',
-    status: 'Aktif'
+    status: 'Aktif',
+    tanggalBergabung: ''
   });
   const [formErrors, setFormErrors] = useState({});
 
@@ -71,6 +73,7 @@ export default function DataGuruView() {
       return !isNaN(num) && num > max ? num : max;
     }, 0);
     const nextId = `G-${String(maxNum + 1).padStart(3, '0')}`;
+    const todayStr = new Date().toISOString().split('T')[0];
 
     setModalMode('add');
     setEditingGuruId(null);
@@ -79,7 +82,8 @@ export default function DataGuruView() {
       nama: '',
       mapel: '',
       pengalaman: '3 Tahun',
-      status: 'Aktif'
+      status: 'Aktif',
+      tanggalBergabung: todayStr
     });
     setFormErrors({});
     setIsModalOpen(true);
@@ -94,7 +98,8 @@ export default function DataGuruView() {
       nama: guru.nama,
       mapel: guru.mapel,
       pengalaman: guru.pengalaman || '',
-      status: guru.status || 'Aktif'
+      status: guru.status || 'Aktif',
+      tanggalBergabung: guru.tanggalBergabung || new Date().toISOString().split('T')[0]
     });
     setFormErrors({});
     setIsModalOpen(true);
@@ -125,13 +130,16 @@ export default function DataGuruView() {
       return;
     }
 
+    const savedDate = formData.tanggalBergabung || new Date().toISOString().split('T')[0];
+
     if (modalMode === 'add') {
       addGuru({
         id: formData.id.trim(),
         nama: formData.nama.trim(),
         mapel: formData.mapel.trim(),
         pengalaman: formData.pengalaman.trim() || '1 Tahun',
-        status: formData.status
+        status: formData.status,
+        tanggalBergabung: savedDate
       });
       showToast(`Guru ${formData.nama} berhasil ditambahkan!`);
     } else {
@@ -139,7 +147,8 @@ export default function DataGuruView() {
         nama: formData.nama.trim(),
         mapel: formData.mapel.trim(),
         pengalaman: formData.pengalaman.trim() || '1 Tahun',
-        status: formData.status
+        status: formData.status,
+        tanggalBergabung: savedDate
       });
       showToast(`Data guru ${formData.nama} berhasil diperbarui!`);
     }
@@ -298,8 +307,9 @@ export default function DataGuruView() {
                         </div>
                         <div>
                           <div style={{ fontWeight: 600 }}>{guru.nama}</div>
-                          <div style={{ fontSize: '11.5px', color: 'var(--color-text-muted)' }}>
-                            Pengajar Nurul Fikri
+                          <div style={{ fontSize: '11px', color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
+                            <Calendar size={11} color="var(--color-primary)" />
+                            <span>Terdaftar: {guru.tanggalBergabung ? new Date(guru.tanggalBergabung).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Hari Ini'}</span>
                           </div>
                         </div>
                       </div>
@@ -394,6 +404,19 @@ export default function DataGuruView() {
               className={`form-input ${formErrors.mapel ? 'is-invalid' : ''}`}
             />
             {formErrors.mapel && <div className="form-error-text">{formErrors.mapel}</div>}
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">
+              Tanggal Terdaftar / Bergabung <span className="required-star">*</span>
+            </label>
+            <input
+              type="date"
+              value={formData.tanggalBergabung}
+              onChange={(e) => setFormData({ ...formData, tanggalBergabung: e.target.value })}
+              className="form-input"
+            />
+            <div className="form-help-text">Tanggal mulai terdaftar aktif di Bimbingan Belajar Nurul Fikri.</div>
           </div>
 
           <div className="form-row-2">

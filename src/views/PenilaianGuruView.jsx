@@ -11,7 +11,8 @@ import {
   Sparkles,
   Info,
   ArrowRight,
-  TrendingUp
+  TrendingUp,
+  Calendar
 } from 'lucide-react';
 import { useSpk } from '../context/SpkContext';
 import Modal from '../components/Modal';
@@ -25,7 +26,9 @@ export default function PenilaianGuruView({ onNavigate }) {
     fillDefaultScores,
     resetPenilaianToDefault, 
     isGuruComplete,
-    completeness 
+    completeness,
+    tanggalPenilaian,
+    setTanggalPenilaian
   } = useSpk();
 
   // Search & Filter
@@ -256,9 +259,22 @@ export default function PenilaianGuruView({ onNavigate }) {
             </div>
           </div>
 
-          <div className="toolbar-right">
+          <div className="toolbar-right" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#F8FAFC', padding: '6px 12px', borderRadius: '8px', border: '1px solid var(--color-border)' }}>
+              <Calendar size={16} color="var(--color-primary)" />
+              <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-navy)', whiteSpace: 'nowrap' }}>
+                Tanggal Evaluasi:
+              </label>
+              <input
+                type="date"
+                value={tanggalPenilaian}
+                onChange={(e) => setTanggalPenilaian(e.target.value)}
+                className="form-input"
+                style={{ padding: '4px 8px', fontSize: '13px', width: 'auto', border: '1px solid #CBD5E1' }}
+              />
+            </div>
             <span style={{ fontSize: '12.5px', color: 'var(--color-text-muted)' }}>
-              Skala Penilaian: <strong>0 – 100</strong> (Rubrik Akademis NF)
+              Skala: <strong>0 – 100</strong>
             </span>
           </div>
         </div>
@@ -271,9 +287,15 @@ export default function PenilaianGuruView({ onNavigate }) {
             <h3>Matriks Evaluasi Kinerja Guru (Data Nilai per Kriteria)</h3>
             <p>Nilai riil setiap guru terhadap 8 kriteria evaluasi Bimbingan Belajar Nurul Fikri</p>
           </div>
-          <span className="badge badge-rank">
-            {guruList.length} Guru Alternatif × {kriteriaList.length} Kriteria
-          </span>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <span className="badge badge-success" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+              <Calendar size={12} />
+              <span>Evaluasi: {new Date(tanggalPenilaian).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+            </span>
+            <span className="badge badge-rank">
+              {guruList.length} Guru Alternatif × {kriteriaList.length} Kriteria
+            </span>
+          </div>
         </div>
 
         {guruList.length === 0 ? (
@@ -443,6 +465,10 @@ export default function PenilaianGuruView({ onNavigate }) {
                 </div>
                 <div style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>
                   Mata Pelajaran: {selectedGuru.mapel} • ID: {selectedGuru.id}
+                </div>
+                <div style={{ fontSize: '11.5px', color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px', fontWeight: 600 }}>
+                  <Calendar size={12} />
+                  <span>Tanggal Evaluasi: {new Date(tanggalPenilaian).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
                 </div>
               </div>
               <div style={{ textAlign: 'right' }}>

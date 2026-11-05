@@ -18,7 +18,7 @@ import {
 import { useSpk } from '../context/SpkContext';
 
 export default function HasilLaporanView({ onNavigate }) {
-  const { sawResults, kriteriaList, guruList } = useSpk();
+  const { sawResults, kriteriaList, guruList, tanggalPenilaian } = useSpk();
   const [downloadSuccess, setDownloadSuccess] = useState(false);
 
   // If SAW calculations are invalid / data incomplete
@@ -101,9 +101,9 @@ export default function HasilLaporanView({ onNavigate }) {
     setTimeout(() => setDownloadSuccess(false), 3000);
   };
 
-  const currentDateFormatted = new Intl.DateTimeFormat('id-ID', {
+  const evaluationDateFormatted = new Intl.DateTimeFormat('id-ID', {
     dateStyle: 'long'
-  }).format(new Date());
+  }).format(tanggalPenilaian ? new Date(tanggalPenilaian) : new Date());
 
   return (
     <div>
@@ -125,7 +125,7 @@ export default function HasilLaporanView({ onNavigate }) {
             SURAT KEPUTUSAN REKOMENDASI GURU TERBAIK
           </h3>
           <p style={{ fontSize: '10pt', margin: '4px 0 0', color: '#555555' }}>
-            Nomor: 042/SK-GURU/BIMBEL-NF/2026 • Tanggal: {currentDateFormatted}
+            Nomor: 042/SK-GURU/BIMBEL-NF/2026 • Tanggal Evaluasi: {evaluationDateFormatted}
           </p>
         </div>
       </div>
@@ -138,8 +138,8 @@ export default function HasilLaporanView({ onNavigate }) {
               <h3 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--color-navy)' }}>
                 Hasil Akhir dan Laporan Rekomendasi
               </h3>
-              <p style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>
-                Dokumen keputusan penetapan guru terbaik periode evaluasi berjalan
+              <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>
+                Kalkulasi SAW resmi untuk periode evaluasi tanggal: <strong>{evaluationDateFormatted}</strong>
               </p>
             </div>
           </div>
@@ -331,7 +331,7 @@ export default function HasilLaporanView({ onNavigate }) {
           </div>
 
           <div className="print-signature-box">
-            <div>Depok, {currentDateFormatted}</div>
+            <div>Depok, {evaluationDateFormatted}</div>
             <div style={{ fontWeight: 'bold' }}>Ketua Tim Penilai Akademis</div>
             <div className="signature-line">
               ( Dr. Hj. Nur Aini, M.Pd. )

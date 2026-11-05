@@ -3,6 +3,7 @@ import { SpkProvider } from './context/SpkContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
+import LandingView from './views/LandingView';
 import LoginView from './views/LoginView';
 import DashboardView from './views/DashboardView';
 import DataGuruView from './views/DataGuruView';
@@ -15,6 +16,12 @@ function AppContent() {
   const { isAuthenticated } = useAuth();
   const [activeModule, setActiveModule] = useState('dashboard');
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [showLanding, setShowLanding] = useState(true);
+
+  // Tampilkan landing page jika belum pernah klik "Masuk"
+  if (showLanding && !isAuthenticated) {
+    return <LandingView onEnterApp={() => setShowLanding(false)} />;
+  }
 
   // Tampilkan halaman login jika belum terautentikasi
   if (!isAuthenticated) {
@@ -81,3 +88,5 @@ export default function App() {
     </AuthProvider>
   );
 }
+
+

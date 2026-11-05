@@ -4,18 +4,36 @@ import { calculateSaw } from '../utils/sawCalculation';
 
 const SpkContext = createContext();
 
-const STORAGE_KEY_GURU = 'spk_nf_guru_master';
+const STORAGE_KEY_GURU = 'spk_nf_guru_master_v2';
 const STORAGE_KEY_KRITERIA = 'spk_nf_kriteria_master';
-const STORAGE_KEY_PENILAIAN = 'spk_nf_penilaian_master';
+const STORAGE_KEY_PENILAIAN = 'spk_nf_penilaian_master_v2';
+const STORAGE_KEY_TANGGAL_PENILAIAN = 'spk_nf_tanggal_penilaian_v2';
 
 export function SpkProvider({ children }) {
   // Initialize Guru Data
   const [guruList, setGuruList] = useState(() => {
     try {
+      // Clear legacy dummy cache if present
+      if (typeof window !== 'undefined' && window.localStorage) {
+        if (localStorage.getItem('spk_nf_guru_master')) {
+          localStorage.removeItem('spk_nf_guru_master');
+          localStorage.removeItem('spk_nf_penilaian_master');
+        }
+      }
       const saved = localStorage.getItem(STORAGE_KEY_GURU);
       return saved ? JSON.parse(saved) : GURU_SIMULASI;
     } catch {
       return GURU_SIMULASI;
+    }
+  });
+
+  // Initialize Evaluation Date (Default: Hari Ini)
+  const [tanggalPenilaian, setTanggalPenilaian] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_TANGGAL_PENILAIAN);
+      return saved || new Date().toISOString().split('T')[0];
+    } catch {
+      return new Date().toISOString().split('T')[0];
     }
   });
 
@@ -63,6 +81,14 @@ export function SpkProvider({ children }) {
       console.warn('Gagal menyimpan penilaian ke localStorage:', e);
     }
   }, [penilaianMap]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY_TANGGAL_PENILAIAN, tanggalPenilaian);
+    } catch (e) {
+      console.warn('Gagal menyimpan tanggal penilaian ke localStorage:', e);
+    }
+  }, [tanggalPenilaian]);
 
   // Operations: Guru
   const addGuru = (newGuru) => {
@@ -161,6 +187,8 @@ export function SpkProvider({ children }) {
     kriteriaList: kriteriaWithNormalizedWeights,
     penilaianMap,
     totalBobot,
+    tanggalPenilaian,
+    setTanggalPenilaian,
     sawResults,
     addGuru,
     updateGuru,

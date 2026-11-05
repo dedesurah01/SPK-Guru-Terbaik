@@ -18,6 +18,7 @@ Aplikasi web Sistem Pendukung Keputusan untuk membantu pengelola Bimbingan Belaj
 4. **Penilaian Guru** — memasukkan dan mengubah nilai guru per kriteria; validasi kelengkapan nilai.
 5. **Perhitungan SAW** — menampilkan matriks keputusan, normalisasi, bobot ternormalisasi, dan nilai preferensi.
 6. **Hasil dan Laporan** — peringkat guru, skor akhir, dan tampilan laporan yang dapat dicetak melalui fungsi cetak browser jika diimplementasikan.
+7. **Autentikasi** — login dan logout untuk pengguna.
 
 ## 5. Kriteria dan Bobot Awal
 | Kode | Kriteria | Bobot awal | Jenis |

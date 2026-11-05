@@ -20,7 +20,7 @@ import {
 } from '../data/simulationData';
 
 export default function DashboardView({ onNavigate }) {
-  const { guruList, kriteriaList, totalBobot, completeness, sawResults } = useSpk();
+  const { guruList, kriteriaList, totalBobot, completeness, sawResults, tanggalPenilaian } = useSpk();
 
   const guruAktifCount = guruList.filter(g => g.status === 'Aktif').length;
 
@@ -28,6 +28,10 @@ export default function DashboardView({ onNavigate }) {
   const topCandidate = sawResults.isValid && sawResults.sortedRankings.length > 0
     ? sawResults.sortedRankings[0]
     : null;
+
+  const formattedEvalDate = tanggalPenilaian
+    ? new Date(tanggalPenilaian).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
+    : 'Hari Ini';
 
   return (
     <div>
@@ -38,8 +42,7 @@ export default function DashboardView({ onNavigate }) {
           <div>
             <strong style={{ color: '#14532D' }}>Sistem Terintegrasi Penuh (Phase 6 — Siap Pakai)</strong>
             <p style={{ color: '#166534' }}>
-              Keenam modul SPK Pemilihan Guru Terbaik Bimbingan Belajar Nurul Fikri telah aktif dan terintegrasi secara menyeluruh: 
-              <strong> Data Guru</strong>, <strong>Kriteria & Bobot</strong>, <strong>Penilaian Guru</strong>, <strong>Perhitungan SAW</strong>, dan <strong>Hasil & Laporan (Cetak Dokumen Resmi)</strong>.
+              Keenam modul SPK Pemilihan Guru Terbaik Bimbingan Belajar Nurul Fikri telah aktif dan terintegrasi secara menyeluruh. Periode evaluasi aktif: <strong>{formattedEvalDate}</strong>.
             </p>
           </div>
         </div>
@@ -73,11 +76,11 @@ export default function DashboardView({ onNavigate }) {
         />
         <KpiCard
           title="Rekomendasi Peringkat 1"
-          value={topCandidate ? topCandidate.guruNama.split(',')[0] : RANKING_SIMULASI[0].nama.split(',')[0]}
-          subtitle={topCandidate ? `Skor SAW: ${topCandidate.preferenceScore.toFixed(4)}` : `Skor: ${RANKING_SIMULASI[0].skor}`}
+          value={topCandidate ? topCandidate.guruNama.split(',')[0] : (RANKING_SIMULASI.length > 0 ? RANKING_SIMULASI[0].nama.split(',')[0] : "-")}
+          subtitle={topCandidate ? `Skor SAW: ${topCandidate.preferenceScore.toFixed(4)}` : (RANKING_SIMULASI.length > 0 ? `Skor: ${RANKING_SIMULASI[0].skor}` : "Belum ada penilaian")}
           icon={Trophy}
-          badgeText={topCandidate ? "SAW Real-time" : "Simulasi"}
-          badgeType="success"
+          badgeText={topCandidate ? "SAW Real-time" : (RANKING_SIMULASI.length > 0 ? "Simulasi" : "Menunggu Data")}
+          badgeType={topCandidate ? "success" : "neutral"}
         />
       </div>
 
@@ -181,7 +184,7 @@ export default function DashboardView({ onNavigate }) {
                       </td>
                     </tr>
                   ))
-                ) : (
+                ) : RANKING_SIMULASI.length > 0 ? (
                   RANKING_SIMULASI.map((item) => (
                     <tr key={item.kodeGuru}>
                       <td>
@@ -206,6 +209,13 @@ export default function DashboardView({ onNavigate }) {
                       </td>
                     </tr>
                   ))
+                ) : (
+                  <tr>
+                    <td colSpan="5" style={{ textAlign: 'center', padding: '36px 16px', color: 'var(--color-text-muted)' }}>
+                      <p style={{ fontWeight: 600, color: 'var(--color-navy)', marginBottom: '4px' }}>Belum Ada Data Guru</p>
+                      <p style={{ fontSize: '13px' }}>Silakan tambahkan data guru pengajar baru melalui menu <strong>Data Guru</strong>.</p>
+                    </td>
+                  </tr>
                 )}
               </tbody>
             </table>
