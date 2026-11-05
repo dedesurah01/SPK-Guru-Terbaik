@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Presentasi SPK Pemilihan Guru Terbaik - Nurul Fikri</title>
+  <title>Presentasi SPK Pemilihan Guru Terbaik - Bimbel Nurul Fikri</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -47,7 +47,7 @@
     /* Top Control Bar */
     .top-bar {
       width: 100%;
-      max-width: 1150px;
+      max-width: 1180px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -66,7 +66,7 @@
     }
 
     .brand-tag span.badge {
-      background: rgba(37, 99, 235, 0.2);
+      background: rgba(37, 99, 235, 0.25);
       color: #60a5fa;
       border: 1px solid rgba(37, 99, 235, 0.4);
       padding: 2px 8px;
@@ -100,25 +100,25 @@
       border-color: rgba(255, 255, 255, 0.3);
     }
 
-    /* Main Presentation Frame (16:9 Aspect Ratio) */
+    /* Main Deck (16:9 Frame) */
     .deck-container {
       width: 100%;
-      max-width: 1150px;
+      max-width: 1180px;
       aspect-ratio: 16 / 9;
       background: #ffffff;
       border-radius: 16px;
-      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.1);
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.1);
       position: relative;
       overflow: hidden;
       display: flex;
       flex-direction: column;
     }
 
-    /* Slide Elements */
+    /* Slides */
     .slide {
       position: absolute;
       inset: 0;
-      padding: 48px 56px 40px;
+      padding: 44px 52px 38px;
       display: flex;
       flex-direction: column;
       opacity: 0;
@@ -138,7 +138,7 @@
 
     /* Slide Header */
     .slide-header {
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
 
     .slide-badge {
@@ -151,23 +151,23 @@
       background: var(--primary-light);
       padding: 4px 10px;
       border-radius: 6px;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .slide-title {
-      font-size: 28px;
+      font-size: 26px;
       font-weight: 800;
       color: var(--navy);
       line-height: 1.25;
     }
 
     .slide-subtitle {
-      font-size: 14px;
+      font-size: 13.5px;
       color: var(--slate-500);
-      margin-top: 4px;
+      margin-top: 3px;
     }
 
-    /* Slide Body Layouts */
+    /* Layouts */
     .slide-content {
       flex: 1;
       display: flex;
@@ -178,9 +178,9 @@
     .grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 24px;
+      gap: 20px;
       height: 100%;
-      align-items: center;
+      align-items: stretch;
     }
 
     .grid-3 {
@@ -196,6 +196,7 @@
       grid-template-columns: repeat(4, 1fr);
       gap: 12px;
       height: 100%;
+      align-items: stretch;
     }
 
     /* Cards */
@@ -203,7 +204,7 @@
       background: #ffffff;
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 20px;
+      padding: 18px;
       box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
       display: flex;
       flex-direction: column;
@@ -216,22 +217,9 @@
       position: relative;
     }
 
-    .card.highlight::before {
-      content: "TOP RANK";
-      position: absolute;
-      top: -10px;
-      right: 16px;
-      background: var(--primary);
-      color: white;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 999px;
-    }
-
     .card-icon {
-      width: 36px;
-      height: 36px;
+      width: 34px;
+      height: 34px;
       border-radius: 8px;
       background: var(--primary-light);
       color: var(--primary);
@@ -239,65 +227,96 @@
       align-items: center;
       justify-content: center;
       font-weight: 800;
-      font-size: 16px;
-      margin-bottom: 12px;
+      font-size: 15px;
+      margin-bottom: 10px;
     }
 
     .card-title {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
       color: var(--navy);
       margin-bottom: 6px;
     }
 
     .card-desc {
-      font-size: 13px;
+      font-size: 12.5px;
       color: var(--slate-500);
       line-height: 1.5;
     }
 
     /* Lists */
-    ul.feature-list {
+    ul.bullet-list {
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
 
-    ul.feature-list li {
+    ul.bullet-list li {
       display: flex;
       align-items: flex-start;
-      gap: 12px;
-      font-size: 14px;
+      gap: 10px;
+      font-size: 13px;
       color: var(--slate-700);
-      line-height: 1.4;
+      line-height: 1.45;
     }
 
-    ul.feature-list li .check-icon {
+    ul.bullet-list li .bullet-icon {
       width: 20px;
       height: 20px;
       border-radius: 50%;
-      background: #dcfce7;
-      color: var(--success);
+      background: #dbeafe;
+      color: var(--primary);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: bold;
       flex-shrink: 0;
-      margin-top: 2px;
+      margin-top: 1px;
     }
 
-    /* Formula Box */
-    .formula-box {
-      background: var(--slate-100);
-      border-left: 4px solid var(--primary);
-      padding: 14px 18px;
-      border-radius: 0 10px 10px 0;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
-      color: var(--navy);
-      margin: 8px 0;
+    ul.bullet-list li .bullet-icon.check {
+      background: #dcfce7;
+      color: var(--success);
+    }
+
+    ul.bullet-list li .bullet-icon.alert {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    /* Stepper / Timeline */
+    .timeline-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .timeline-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 14px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      transition: all 0.2s;
+    }
+
+    .timeline-item.done {
+      border-left: 4px solid var(--success);
+    }
+
+    .timeline-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: #dcfce7;
+      color: #15803d;
+      white-space: nowrap;
     }
 
     /* Tables */
@@ -336,71 +355,67 @@
       border-bottom: none;
     }
 
-    table.data-table tr.highlight-row {
-      background: #eff6ff;
-      font-weight: 600;
-    }
-
-    .badge-benefit {
-      background: #dcfce7;
-      color: #15803d;
+    .badge-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
       padding: 2px 6px;
       border-radius: 4px;
-      font-weight: 700;
-      font-size: 10px;
+      background: #eff6ff;
+      color: var(--primary);
     }
 
-    /* Title Slide Specifics */
+    /* Cover Hero Slide */
     .slide-title-hero {
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #1e3a8a 100%);
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 55%, #1e3a8a 100%);
       color: white;
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 60px 40px;
+      padding: 50px 36px;
     }
 
     .slide-title-hero .hero-badge {
       background: rgba(37, 99, 235, 0.35);
       border: 1px solid rgba(96, 165, 250, 0.4);
       color: #93c5fd;
-      padding: 6px 16px;
+      padding: 5px 14px;
       border-radius: 999px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
       display: inline-block;
     }
 
     .slide-title-hero h1 {
-      font-size: 34px;
+      font-size: 32px;
       font-weight: 800;
       line-height: 1.25;
-      max-width: 850px;
-      margin: 0 auto 16px;
+      max-width: 900px;
+      margin: 0 auto 14px;
       background: linear-gradient(to right, #ffffff, #cbd5e1);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .slide-title-hero .hero-sub {
-      font-size: 16px;
+      font-size: 15px;
       color: #94a3b8;
-      max-width: 700px;
-      margin: 0 auto 32px;
+      max-width: 760px;
+      margin: 0 auto 28px;
       line-height: 1.5;
     }
 
     .slide-title-hero .hero-meta {
       display: flex;
-      gap: 24px;
+      gap: 28px;
       justify-content: center;
       align-items: center;
-      font-size: 13px;
+      font-size: 12.5px;
       color: #cbd5e1;
-      padding-top: 20px;
+      padding-top: 18px;
       border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
 
@@ -412,20 +427,21 @@
     }
 
     .slide-title-hero .hero-meta span.label {
-      font-size: 11px;
+      font-size: 10px;
       color: #64748b;
       text-transform: uppercase;
+      letter-spacing: 0.8px;
     }
 
-    /* Bottom Control Bar inside Deck */
+    /* Bottom Deck Bar */
     .deck-footer {
-      height: 48px;
+      height: 44px;
       background: #ffffff;
       border-top: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 24px;
+      padding: 0 20px;
       font-size: 12px;
       color: var(--slate-500);
       z-index: 10;
@@ -457,13 +473,13 @@
       background: var(--slate-100);
       color: var(--navy);
       border: 1px solid var(--border);
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
+      font-size: 13px;
       cursor: pointer;
       transition: all 0.2s;
     }
@@ -477,12 +493,12 @@
     /* Speaker Notes Drawer */
     .notes-drawer {
       width: 100%;
-      max-width: 1150px;
-      margin-top: 14px;
+      max-width: 1180px;
+      margin-top: 12px;
       background: #1e293b;
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 12px;
-      padding: 16px 20px;
+      padding: 14px 18px;
       color: #cbd5e1;
       font-size: 13px;
       display: none;
@@ -495,7 +511,7 @@
     .notes-header {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
@@ -514,7 +530,7 @@
       gap: 16px;
       font-size: 12px;
       color: #64748b;
-      margin-top: 10px;
+      margin-top: 8px;
     }
 
     kbd {
@@ -527,7 +543,7 @@
       font-size: 11px;
     }
 
-    /* Print Stylesheet for Direct PDF Export */
+    /* Print Stylesheet */
     @media print {
       body {
         background: white;
@@ -549,7 +565,7 @@
         page-break-after: always;
         height: 100vh;
         width: 100vw;
-        padding: 40px !important;
+        padding: 36px !important;
       }
     }
   </style>
@@ -560,7 +576,7 @@
   <div class="top-bar">
     <div class="brand-tag">
       <strong>Bimbel Nurul Fikri</strong>
-      <span class="badge">SPK SAW - Pemilihan Guru Terbaik</span>
+      <span class="badge">Laporan Proyek SPK SAW</span>
     </div>
     <div class="top-actions">
       <button class="btn-action" onclick="toggleNotes()">
@@ -579,10 +595,10 @@
   <div class="deck-container" id="presentationDeck">
 
     <!-- SLIDE 1: COVER -->
-    <div class="slide slide-title-hero active" data-title="Judul Proyek" data-notes="Selamat pagi/siang bapak/ibu dosen dan rekan-rekan sekalian. Pada kesempatan kali ini, saya akan mempresentasikan hasil perancangan dan implementasi Sistem Pendukung Keputusan Pemilihan Guru Terbaik di Bimbingan Belajar Nurul Fikri dengan menggunakan metode Simple Additive Weighting (SAW). Sistem ini dirancang untuk mengatasi subjektivitas dalam evaluasi kinerja guru melalui pendekatan kuantitatif yang transparan dan dapat diaudit.">
-      <span class="hero-badge">PRESENTASI PROYEK AKHIR / SEMESTER 5</span>
+    <div class="slide slide-title-hero active" data-title="Judul Proyek" data-notes="Selamat pagi/siang bapak/ibu dosen penguji dan rekan-rekan sekalian. Pada presentasi ini, saya menyampaikan laporan perkembangan proyek pembangunan Sistem Pendukung Keputusan Pemilihan Guru Terbaik di Bimbingan Belajar Nurul Fikri dengan menerapkan metode Simple Additive Weighting (SAW). Presentasi ini memuat 6 pokok bahasan utama mulai dari latar belakang, rumusan masalah, batasan masalah, progres pengerjaan, peran fungsi modul, hingga rincian modul yang telah tuntas dikerjakan.">
+      <span class="hero-badge">PRESENTASI PROYEK AKHIR & PROGRESS LAPORAN</span>
       <h1>Sistem Pendukung Keputusan Pemilihan Guru Terbaik</h1>
-      <p class="hero-sub">Implementasi Metode Simple Additive Weighting (SAW) Berbasis Web Modern pada Bimbingan Belajar Nurul Fikri</p>
+      <p class="hero-sub">Penerapan Metode Simple Additive Weighting (SAW) Berbasis Web Modern pada Bimbingan Belajar Nurul Fikri</p>
       <div class="hero-meta">
         <div>
           <span class="label">Studi Kasus</span>
@@ -594,53 +610,57 @@
         </div>
         <div>
           <span class="label">Teknologi</span>
-          <strong>React 18 + Vite + Tailwind CSS</strong>
+          <strong>React 18 + Vite + Tailwind</strong>
+        </div>
+        <div>
+          <span class="label">Status Proyek</span>
+          <strong style="color: #4ade80;">Phase 0 s.d. 8 Selesai 100%</strong>
         </div>
       </div>
     </div>
 
-    <!-- SLIDE 2: LATAR BELAKANG & MASALAH -->
-    <div class="slide" data-title="Latar Belakang & Masalah" data-notes="Latar belakang masalah: Guru merupakan pilar utama kualitas bimbingan belajar Nurul Fikri. Selama ini proses evaluasi dan penentuan guru terbaik sering kali memakan waktu lama, rawan subjektivitas pimpinan, dan sulit dilacak perhitungannya. Oleh karena itu, dibutuhkan sebuah SPK multi-kriteria yang adil, transparan, dan dapat diaudit secara matematis.">
+    <!-- SLIDE 2: LATAR BELAKANG -->
+    <div class="slide" data-title="1. Latar Belakang" data-notes="Latar belakang proyek ini bermula dari peran krusial guru di Bimbingan Belajar Nurul Fikri sebagai garda terdepan mutu pendidikan dan kelulusan siswa ke PTN favorit. Selama ini, evaluasi berkala dan penetapan guru terbaik masih menghadapi kendala subjektivitas evaluator, proses rekapitulasi data yang memakan waktu lama, serta ketiadaan bukti audit matematis yang dapat dipertanggungjawabkan. Oleh karena itu, dibangunlah SPK berbasis web dengan metode SAW.">
       <div class="slide-header">
-        <span class="slide-badge">01. Pendahuluan</span>
-        <h2 class="slide-title">Latar Belakang & Rumusan Masalah</h2>
-        <p class="slide-subtitle">Mengapa Sistem Pendukung Keputusan ini krusial bagi Bimbel Nurul Fikri?</p>
+        <span class="slide-badge">01. Latar Belakang</span>
+        <h2 class="slide-title">Urgensi & Konteks Pemilihan Guru Terbaik</h2>
+        <p class="slide-subtitle">Mengapa Sistem Pendukung Keputusan ini sangat krusial bagi Bimbel Nurul Fikri?</p>
       </div>
       <div class="slide-content">
         <div class="grid-2">
           <div class="card">
-            <div class="card-icon">⚠️</div>
-            <h3 class="card-title">Tantangan Saat Ini (Eksisting)</h3>
-            <ul class="feature-list" style="margin-top: 10px;">
+            <div class="card-icon">🏫</div>
+            <h3 class="card-title">Konteks Bimbingan Belajar Nurul Fikri</h3>
+            <ul class="bullet-list" style="margin-top: 8px;">
               <li>
-                <div class="check-icon" style="background:#fee2e2; color:#dc2626;">✕</div>
-                <span><strong>Evaluasi Masih Konvensional:</strong> Penilaian berkala memerlukan rekapitulasi lembar kerja manual yang memakan waktu lama.</span>
+                <div class="bullet-icon check">✓</div>
+                <span><strong>Guru sebagai Pilar Mutu:</strong> Keberhasilan siswa menembus PTN impian sangat bertumpu pada kompetensi dan dedikasi pengajar.</span>
               </li>
               <li>
-                <div class="check-icon" style="background:#fee2e2; color:#dc2626;">✕</div>
-                <span><strong>Potensi Bias Subjektif:</strong> Penentuan guru terbaik rentan terhadap persepsi individu evaluator tanpa standarisasi bobot kriteria.</span>
+                <div class="bullet-icon check">✓</div>
+                <span><strong>Apresiasi & Retensi Pengajar:</strong> Dibutuhkan mekanisme penghargaan berkala (Guru Terbaik) untuk memotivasi kinerja dan loyalitas guru.</span>
               </li>
               <li>
-                <div class="check-icon" style="background:#fee2e2; color:#dc2626;">✕</div>
-                <span><strong>Sulit Diaudit:</strong> Tidak ada rekam jejak matematis yang dapat menjelaskan mengapa guru A terpilih dibandingkan guru B.</span>
+                <div class="bullet-icon check">✓</div>
+                <span><strong>Multi-Aspek Kompetensi:</strong> Evaluasi pengajar tidak cukup dari satu aspek, melainkan melibatkan 8 kriteria kompetensi terstandarisasi.</span>
               </li>
             </ul>
           </div>
           <div class="card highlight">
-            <div class="card-icon">💡</div>
-            <h3 class="card-title">Solusi Sistem yang Dibangun</h3>
-            <ul class="feature-list" style="margin-top: 10px;">
+            <div class="card-icon">⚡</div>
+            <h3 class="card-title">Kelemahan Sistem Konvensional & Solusi</h3>
+            <ul class="bullet-list" style="margin-top: 8px;">
               <li>
-                <div class="check-icon">✓</div>
-                <span><strong>Sistem Terkomputerisasi:</strong> Mengelola data alternatif guru dan penilaian multi-kriteria secara terpusat.</span>
+                <div class="bullet-icon alert">✕</div>
+                <span><strong>Potensi Subjektivitas:</strong> Penilaian manual tanpa bobot terukur rentan bias kedekatan emosional (favoritisme).</span>
               </li>
               <li>
-                <div class="check-icon">✓</div>
-                <span><strong>Algoritma SAW Standar:</strong> Normalisasi matriks objektif dan pembobotan matematis yang adil.</span>
+                <div class="bullet-icon alert">✕</div>
+                <span><strong>Rekapitulasi Manual Lambat:</strong> Perhitungan lembar kerja manual memakan waktu berhari-hari dan rawan kesalahan hitung.</span>
               </li>
               <li>
-                <div class="check-icon">✓</div>
-                <span><strong>Transparansi Penuh:</strong> Menampilkan setiap tahap kalkulasi hingga laporan perangkingan siap cetak.</span>
+                <div class="bullet-icon check">★</div>
+                <span><strong>Solusi SPK SAW:</strong> Mengotomatisasi normalisasi dan pembobotan matematis transparan yang menghasilkan keputusan objektif dalam hitungan detik.</span>
               </li>
             </ul>
           </div>
@@ -648,391 +668,303 @@
       </div>
     </div>
 
-    <!-- SLIDE 3: TUJUAN SISTEM -->
-    <div class="slide" data-title="Tujuan & Manfaat" data-notes="Tujuan utama sistem ini ada tiga: 1. Mengotomatisasi seluruh tahapan perhitungan SAW agar bebas dari kesalahan hitung manual, 2. Memberikan rekomendasi peringkat guru terbaik yang objektif kepada pengelola, dan 3. Menyediakan pelaporan yang transparan dan dapat dicetak sebagai arsip akreditasi dan apresiasi guru.">
+    <!-- SLIDE 3: RUMUSAN MASALAH -->
+    <div class="slide" data-title="2. Rumusan Masalah" data-notes="Rumusan masalah dalam proyek ini dirumuskan ke dalam 3 pertanyaan pokok: Pertama, bagaimana merancang sistem yang dapat mengelola data alternatif guru dan kriteria multi-dimensi secara terpusat? Kedua, bagaimana mengimplementasikan metode SAW agar perhitungannya konsisten, akurat, dan dapat ditelusuri? Dan ketiga, bagaimana menyajikan hasil rekomendasi dan laporan resmi yang siap cetak untuk pimpinan Nurul Fikri?">
       <div class="slide-header">
-        <span class="slide-badge">02. Orientasi Proyek</span>
-        <h2 class="slide-title">Tujuan & Manfaat Penerapan Sistem</h2>
-        <p class="slide-subtitle">Target luaran dan kontribusi nyata untuk manajemen Bimbingan Belajar Nurul Fikri</p>
+        <span class="slide-badge">02. Rumusan Masalah</span>
+        <h2 class="slide-title">Pertanyaan Kunci Pengembangan Sistem</h2>
+        <p class="slide-subtitle">Fokus masalah yang diselesaikan melalui perancangan dan implementasi SPK ini</p>
       </div>
       <div class="slide-content">
         <div class="grid-3">
           <div class="card">
-            <div class="card-icon">⚙️</div>
-            <h3 class="card-title">Otomasi Komputasi</h3>
-            <p class="card-desc">Menggantikan proses rekapitulasi manual dengan komputasi instan berakurasi tinggi, memangkas waktu seleksi dari hitungan hari menjadi detik.</p>
+            <div class="card-icon">1</div>
+            <h3 class="card-title">Manajemen Data Terstruktur</h3>
+            <p class="card-desc">
+              Bagaimana merancang antarmuka web yang dapat mengelola data master guru, parameter 8 kriteria kompetensi, dan input penilaian harian/berkala secara terintegrasi dan aman?
+            </p>
+          </div>
+          <div class="card highlight">
+            <div class="card-icon">2</div>
+            <h3 class="card-title">Otomasi Algoritma SAW</h3>
+            <p class="card-desc">
+              Bagaimana menerapkan algoritma <em>Simple Additive Weighting</em> (SAW) secara presisi ke dalam kode sistem sehingga proses pembentukan matriks keputusan, normalisasi, dan pembobotan berjalan otomatis dan bebas dari salah hitung manual?
+            </p>
+          </div>
+          <div class="card">
+            <div class="card-icon">3</div>
+            <h3 class="card-title">Transparansi & Akuntabilitas</h3>
+            <p class="card-desc">
+              Bagaimana menyajikan tahapan perhitungan matematis secara terbuka (*glass box*) dan menerbitkan laporan Surat Keputusan resmi yang siap dicetak untuk pimpinan Bimbel Nurul Fikri?
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: BATASAN MASALAH -->
+    <div class="slide" data-title="3. Batasan Masalah" data-notes="Untuk menjaga fokus dan kualitas sistem, batasan masalah ditetapkan secara tegas: Metode SPK menggunakan Simple Additive Weighting dengan 8 kriteria benefit berbobot 100%. Ruang lingkup terdiri dari 6 modul utama plus autentikasi. Front-end dibangun dengan React 18 dan Vite dengan penyimpanan berbasis client-side localStorage. Sistem berfungsi sebagai instrumen pendukung keputusan bagi pimpinan, bukan pengambil keputusan mutlak.">
+      <div class="slide-header">
+        <span class="slide-badge">03. Batasan Masalah</span>
+        <h2 class="slide-title">Ruang Lingkup & Batasan Pengembangan</h2>
+        <p class="slide-subtitle">Batasan teknis dan fungsional proyek berdasarkan Dokumen Kontrak Kerja (PRD)</p>
+      </div>
+      <div class="slide-content">
+        <div class="grid-2">
+          <div class="card">
+            <h3 class="card-title" style="font-size: 15px;">Batasan Metode & Kriteria SPK</h3>
+            <ul class="bullet-list" style="margin-top: 10px;">
+              <li>
+                <div class="bullet-icon">📐</div>
+                <span><strong>Metode Keputusan:</strong> Menggunakan metode <em>Simple Additive Weighting</em> (SAW) sesuai kaidah matematis PRD.</span>
+              </li>
+              <li>
+                <div class="bullet-icon">📊</div>
+                <span><strong>8 Kriteria Standar Benefit:</strong> Kehadiran (10%), Kedisiplinan (10%), Kualitas Mengajar (10%), Penguasaan Materi (40%), Persiapan (8%), Komunikasi (8%), Pengelolaan Kelas (7%), dan Hasil Belajar (7%).</span>
+              </li>
+              <li>
+                <div class="bullet-icon">⚖️</div>
+                <span><strong>Total Bobot Tetap:</strong> Total bobot terkunci pada 100% dan tervalidasi secara dinamis.</span>
+              </li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3 class="card-title" style="font-size: 15px;">Batasan Sistem & Arsitektur</h3>
+            <ul class="bullet-list" style="margin-top: 10px;">
+              <li>
+                <div class="bullet-icon">💻</div>
+                <span><strong>Teknologi Front-End:</strong> Single Page Application (SPA) berbasis <strong>React 18 + Vite</strong> tanpa ketergantungan server backend kompleks.</span>
+              </li>
+              <li>
+                <div class="bullet-icon">📦</div>
+                <span><strong>Batasan 6 Modul Utama:</strong> Dashboard, Data Guru, Kriteria & Bobot, Penilaian Guru, Perhitungan SAW, serta Hasil dan Laporan (+ Autentikasi).</span>
+              </li>
+              <li>
+                <div class="bullet-icon">🔒</div>
+                <span><strong>Sifat Rekomendasi:</strong> Hasil sistem adalah rekomendasi prioritas terurut (*Decision Support*), bukan penentu otomatis yang mengikat tanpa persetujuan pimpinan.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 5: PROGRESS PROYEK -->
+    <div class="slide" data-title="4. Progress Proyek" data-notes="Perkembangan proyek telah melewati 9 fase eksekusi terstruktur dari Phase 0 hingga Phase 8. Seluruh fase telah tuntas 100%. Mulai dari penyusunan spesifikasi kebutuhan, pembangunan fondasi UI, CRUD master data, form penilaian multi-kriteria, komputasi SAW yang identik dengan hitungan manual, laporan cetak resmi, penambahan fitur input tanggal evaluasi, hingga fitur login dan sinkronisasi repositori GitHub.">
+      <div class="slide-header">
+        <span class="slide-badge">04. Perkembangan Proyek</span>
+        <h2 class="slide-title">Progress Proyek hingga Tahap Terakhir (Phase 0 - Phase 8)</h2>
+        <p class="slide-subtitle">Status implementasi seluruh tahapan kerja proyek SPK Nurul Fikri (100% Selesai)</p>
+      </div>
+      <div class="slide-content">
+        <div class="timeline-container">
+          <div class="timeline-item done">
+            <span class="timeline-badge">Phase 0 — SOT</span>
+            <span style="font-size: 12.5px; font-weight:600; color:var(--navy);">Penetapan Sumber Kebenaran:</span>
+            <span style="font-size: 12px; color:var(--slate-500);">Penyusunan PRD, UI Guideline, dan Implementation Plan disetujui.</span>
+          </div>
+          <div class="timeline-item done">
+            <span class="timeline-badge">Phase 1 & 2 — Shell & Master Data</span>
+            <span style="font-size: 12.5px; font-weight:600; color:var(--navy);">UI Foundation & Data Guru:</span>
+            <span style="font-size: 12px; color:var(--slate-500);">App shell responsif, CRUD Guru, dan pengelolaan kriteria tervalidasi 100%.</span>
+          </div>
+          <div class="timeline-item done">
+            <span class="timeline-badge">Phase 3 & 4 — Penilaian & SAW</span>
+            <span style="font-size: 12.5px; font-weight:600; color:var(--navy);">Form Penilaian & Mesin SAW:</span>
+            <span style="font-size: 12px; color:var(--slate-500);">Input nilai skala 0-100, komputasi matriks X, R, W, dan V terverifikasi identik dengan manual.</span>
+          </div>
+          <div class="timeline-item done">
+            <span class="timeline-badge">Phase 5 & 6 — Laporan & Integrasi</span>
+            <span style="font-size: 12.5px; font-weight:600; color:var(--navy);">Hasil Akhir, Podium & Cetak SK:</span>
+            <span style="font-size: 12px; color:var(--slate-500);">Podium Top 3, unduh CSV, cetak dokumen resmi, dan build Vite produksi bebas error.</span>
+          </div>
+          <div class="timeline-item done">
+            <span class="timeline-badge">Phase 7 & 8 — Rilis & Auth</span>
+            <span style="font-size: 12.5px; font-weight:600; color:var(--navy);">Dokumentasi, Login & Fitur Tanggal:</span>
+            <span style="font-size: 12px; color:var(--slate-500);">Input tanggal evaluasi harian aktif, modul LoginView, dan ter-push ke GitHub.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 6: PENJELASAN PERAN DAN FUNGSI MODUL -->
+    <div class="slide" data-title="5. Peran & Fungsi Modul" data-notes="Sistem tersusun atas 6 modul utama ditambah modul autentikasi yang saling terhubung secara teratur: Modul Login mengamankan hak akses, Dashboard menjadi pusat kontrol visual, Data Guru menyimpan identitas pengajar, Kriteria mengatur bobot penilaian, Penilaian Guru menjadi tempat evaluator memberi skor per tanggal, Perhitungan SAW memproses angka secara transparan, dan Hasil Laporan menyajikan peringkat resmi untuk pimpinan.">
+      <div class="slide-header">
+        <span class="slide-badge">05. Arsitektur Modul</span>
+        <h2 class="slide-title">Peran dan Fungsi Setiap Modul dalam Sistem</h2>
+        <p class="slide-subtitle">Struktur modular yang terintegrasi dari input awal hingga terbitnya rekomendasi akhir</p>
+      </div>
+      <div class="slide-content">
+        <div class="grid-3">
+          <div class="card">
+            <div class="card-icon">🔐</div>
+            <h4 class="card-title">1. Autentikasi (Login)</h4>
+            <p class="card-desc">Gerbang keamanan akses pengelola Bimbel Nurul Fikri untuk mencegah akses tidak terotorisasi.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">📊</div>
+            <h4 class="card-title">2. Dashboard Eksekutif</h4>
+            <p class="card-desc">Menyajikan KPI ringkas total guru, audit bobot, kelengkapan nilai, dan status evaluasi aktif.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">👨‍🏫</div>
+            <h4 class="card-title">3. Data Guru</h4>
+            <p class="card-desc">Mengelola master profil guru alternatif, mata pelajaran, serta rekam jejak tanggal bergabung.</p>
           </div>
           <div class="card">
             <div class="card-icon">⚖️</div>
-            <h3 class="card-title">Keputusan Terukur & Objektif</h3>
-            <p class="card-desc">Menghilangkan favoritisme pribadi dengan menetapkan 8 kriteria kompetensi berbobot terstandarisasi yang disepakati institusi.</p>
+            <h4 class="card-title">4. Kriteria & Bobot</h4>
+            <p class="card-desc">Menstandarisasi 8 indikator kompetensi dan memastikan total pembobotan genap 100%.</p>
           </div>
           <div class="card">
-            <div class="card-icon">📄</div>
-            <h3 class="card-title">Akuntabilitas & Pelaporan</h3>
-            <p class="card-desc">Menyajikan laporan peringkat resmi yang dapat dipertanggungjawabkan kepada guru maupun jajaran manajemen Nurul Fikri.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SLIDE 4: METODE SAW -->
-    <div class="slide" data-title="Metodologi SAW" data-notes="Metode yang digunakan adalah Simple Additive Weighting (SAW), sering disebut penjumlahan terbobot. Keunggulan metode ini adalah kesederhanaan logika matematisnya tanpa mengorbankan akurasi pengambilan keputusan multi-kriteria. Konsep intinya mencari penjumlahan terbobot dari nilai kinerja ternormalisasi pada setiap alternatif guru.">
-      <div class="slide-header">
-        <span class="slide-badge">03. Landasan Teori</span>
-        <h2 class="slide-title">Metodologi Simple Additive Weighting (SAW)</h2>
-        <p class="slide-subtitle">Formulasi matematis dan 4 tahapan inti algoritma SAW</p>
-      </div>
-      <div class="slide-content">
-        <div class="grid-2">
-          <div class="card">
-            <h3 class="card-title" style="font-size:15px;">Tahap 1 & 2: Matriks & Normalisasi</h3>
-            <p class="card-desc" style="margin-bottom:8px;">Membentuk matriks keputusan <strong>X (m &times; n)</strong> dan menormalisasi ke skala komparatif <strong>R</strong>:</p>
-            <div class="formula-box">
-              <strong>Atribut Benefit (Keuntungan):</strong><br>
-              r_ij = x_ij / max(x_j)
-            </div>
-            <div class="formula-box">
-              <strong>Atribut Cost (Biaya):</strong><br>
-              r_ij = min(x_j) / x_ij &nbsp;(x_ij &ne; 0)
-            </div>
+            <div class="card-icon">📝</div>
+            <h4 class="card-title">5. Penilaian Guru</h4>
+            <p class="card-desc">Mencatat skor kinerja guru per kriteria berdasarkan tanggal evaluasi harian/berkala yang dipilih.</p>
           </div>
           <div class="card">
-            <h3 class="card-title" style="font-size:15px;">Tahap 3 & 4: Pembobotan & Preferensi (V)</h3>
-            <p class="card-desc" style="margin-bottom:8px;">Menghitung skor preferensi akhir <strong>V_i</strong> dari penjumlahan perkalian bobot kriteria dengan nilai normalisasi:</p>
-            <div class="formula-box">
-              <strong>Normalisasi Bobot (w_j):</strong><br>
-              w_j = bobot_j / &Sigma; bobot_k &nbsp;&rarr; &Sigma; w_j = 1.0
-            </div>
-            <div class="formula-box" style="border-left-color: #16a34a; background:#f0fdf4;">
-              <strong>Nilai Preferensi Akhir (V_i):</strong><br>
-              V_i = &Sigma; (w_j &times; r_ij)
-            </div>
+            <div class="card-icon">⚙️</div>
+            <h4 class="card-title">6. Perhitungan & Laporan</h4>
+            <p class="card-desc">Memproses formula SAW transparan (X, R, W, V) dan mencetak dokumen Surat Keputusan penetapan guru terbaik.</p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- SLIDE 5: KRITERIA & BOBOT -->
-    <div class="slide" data-title="Kriteria & Bobot" data-notes="Sistem menggunakan 8 kriteria penilaian terstandarisasi Nurul Fikri dengan total bobot 100. Kriteria Penguasaan Materi (C4) memiliki bobot tertinggi yaitu 40 persen, karena penguasaan materi merupakan kompetensi inti pengajar bimbel. Seluruh kriteria bertipe BENEFIT, artinya semakin tinggi nilai yang diperoleh guru, semakin baik kinerjanya.">
+    <!-- SLIDE 7: DETAIL MODUL YANG DIKERJAKAN (BAGIAN 1) -->
+    <div class="slide" data-title="6. Modul Dikerjakan (Part 1)" data-notes="Mari kita bedah detail modul yang telah selesai dikerjakan pada bagian master data: Modul Dashboard dilengkapi 4 kartu metrik pintar dan pelacak alur sistem. Modul Data Guru memiliki form modal responsif dengan field tanggal terdaftar otomatis dan konfirmasi hapus dua tahap. Serta modul Kriteria dan Bobot dilengkapi pengawas total bobot real-time agar audit sistem selalu memenuhi standar 100 persen.">
       <div class="slide-header">
-        <span class="slide-badge">04. Parameter SPK</span>
-        <h2 class="slide-title">Kriteria & Bobot Penilaian Guru</h2>
-        <p class="slide-subtitle">Standar 8 kriteria kompetensi pengajar Bimbingan Belajar Nurul Fikri</p>
+        <span class="slide-badge">06. Rincian Modul (Bagian 1)</span>
+        <h2 class="slide-title">Rincian Modul yang Telah Dikerjakan (Master Data)</h2>
+        <p class="slide-subtitle">Implementasi nyata pada Modul Dashboard, Data Guru, dan Kriteria & Bobot</p>
       </div>
       <div class="slide-content">
-        <div class="table-container">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Kode</th>
-                <th>Nama Kriteria</th>
-                <th style="text-align:center;">Bobot Mentah</th>
-                <th style="text-align:center;">Bobot Relatif (W)</th>
-                <th style="text-align:center;">Jenis</th>
-                <th>Keterangan Deskriptif</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td><strong>C1</strong></td><td>Kehadiran</td><td style="text-align:center;">10</td><td style="text-align:center;">0.10 (10%)</td><td style="text-align:center;"><span class="badge-benefit">Benefit</span></td><td>Tingkat presensi dan komitmen mengajar</td></tr>
-              <tr><td><strong>C2</strong></td><td>Kedisiplinan</td><td style="text-align:center;">10</td><td style="text-align:center;">0.10 (10%)</td><td style="text-align:center;"><span class="badge-benefit">Benefit</span></td><td>Kepatuhan SOP dan ketepatan waktu hadir</td></tr>
-              <tr><td><strong>C3</strong></td><td>Kualitas Mengajar</td><td style="text-align:center;">10</td><td style="text-align:center;">0.10 (10%)</td><td style="text-align:center;"><span class="badge-benefit">Benefit</span></td><td>Metodologi penyampaian interaktif</td></tr>
-              <tr class="highlight-row"><td><strong>C4</strong></td><td>Penguasaan Materi</td><td style="text-align:center;"><strong>40</strong></td><td style="text-align:center;"><strong>0.40 (40%)</strong></td><td style="text-align:center;"><span class="badge-benefit">Benefit</span></td><td><strong>Kompetensi Inti Pengajar Bimbel</strong></td></tr>
-              <tr><td><strong>C5</strong></td><td>Persiapan Mengajar</td><td style="text-align:center;">8</td><td style="text-align:center;">0.08 (8%)</td><td style="text-align:center;"><span class="badge-benefit">Benefit</span></td><td>Kesiapan modul, RPP, dan latihan soal</td></tr>
-              <tr><td><strong>C6</strong></td><td>Kemampuan Komunikasi</td><td style="text-align:center;">8</td><td style="text-align:center;">0.08 (8%)</td><td style="text-align:center;"><span class="badge-benefit">Benefit</span></td><td>Interaksi persuasif kepada siswa</td></tr>
-              <tr><td><strong>C7</strong></td><td>Pengelolaan Kelas</td><td style="text-align:center;">7</td><td style="text-align:center;">0.07 (7%)</td><td style="text-align:center;"><span class="badge-benefit">Benefit</span></td><td>Kondusivitas suasana belajar di kelas</td></tr>
-              <tr><td><strong>C8</strong></td><td>Hasil Belajar Siswa</td><td style="text-align:center;">7</td><td style="text-align:center;">0.07 (7%)</td><td style="text-align:center;"><span class="badge-benefit">Benefit</span></td><td>Peningkatan nilai tryout/evaluasi siswa</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- SLIDE 6: STRUKTUR DATA ALTERNATIF & MATRIKS X -->
-    <div class="slide" data-title="Matriks Keputusan (X)" data-notes="Sistem dirancang dengan fleksibilitas penuh untuk menampung data pengajar bimbingan belajar Nurul Fikri secara dinamis. Pengelola dapat mendaftarkan guru baru beserta mata pelajaran yang diampu melalui modul Data Guru, kemudian memasukkan penilaian pada 8 kriteria untuk membentuk matriks keputusan X. Begitu data diinput, sistem langsung mengolah nilai maksimum tiap kriteria secara otomatis.">
-      <div class="slide-header">
-        <span class="slide-badge">05. Data Alternatif & Matriks</span>
-        <h2 class="slide-title">Struktur Data Alternatif Guru & Matriks Keputusan (X)</h2>
-        <p class="slide-subtitle">Format terstruktur yang siap menampung data pengajar riil pada 8 kriteria evaluasi</p>
-      </div>
-      <div class="slide-content">
-        <div class="table-container">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Kode</th>
-                <th>Alternatif Pengajar</th>
-                <th>Mata Pelajaran</th>
-                <th style="text-align:center;">C1</th>
-                <th style="text-align:center;">C2</th>
-                <th style="text-align:center;">C3</th>
-                <th style="text-align:center;">C4</th>
-                <th style="text-align:center;">C5</th>
-                <th style="text-align:center;">C6</th>
-                <th style="text-align:center;">C7</th>
-                <th style="text-align:center;">C8</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td><strong>A1</strong></td><td><em>[Input Guru Alternatif 1]</em></td><td><em>[Mapel 1]</em></td><td style="text-align:center;">x₁₁</td><td style="text-align:center;">x₁₂</td><td style="text-align:center;">x₁₃</td><td style="text-align:center;">x₁₄</td><td style="text-align:center;">x₁₅</td><td style="text-align:center;">x₁₆</td><td style="text-align:center;">x₁₇</td><td style="text-align:center;">x₁₈</td></tr>
-              <tr><td><strong>A2</strong></td><td><em>[Input Guru Alternatif 2]</em></td><td><em>[Mapel 2]</em></td><td style="text-align:center;">x₂₁</td><td style="text-align:center;">x₂₂</td><td style="text-align:center;">x₂₃</td><td style="text-align:center;">x₂₄</td><td style="text-align:center;">x₂₅</td><td style="text-align:center;">x₂₆</td><td style="text-align:center;">x₂₇</td><td style="text-align:center;">x₂₈</td></tr>
-              <tr><td><strong>A3</strong></td><td><em>[Input Guru Alternatif 3]</em></td><td><em>[Mapel 3]</em></td><td style="text-align:center;">x₃₁</td><td style="text-align:center;">x₃₂</td><td style="text-align:center;">x₃₃</td><td style="text-align:center;">x₃₄</td><td style="text-align:center;">x₃₅</td><td style="text-align:center;">x₃₆</td><td style="text-align:center;">x₃₇</td><td style="text-align:center;">x₃₈</td></tr>
-              <tr><td><strong>A4</strong></td><td><em>[Input Guru Alternatif 4]</em></td><td><em>[Mapel 4]</em></td><td style="text-align:center;">x₄₁</td><td style="text-align:center;">x₄₂</td><td style="text-align:center;">x₄₃</td><td style="text-align:center;">x₄₄</td><td style="text-align:center;">x₄₅</td><td style="text-align:center;">x₄₆</td><td style="text-align:center;">x₄₇</td><td style="text-align:center;">x₄₈</td></tr>
-              <tr><td><strong>A...</strong></td><td><em>[Input Guru Alternatif n]</em></td><td><em>[Mapel n]</em></td><td style="text-align:center;">xₙ₁</td><td style="text-align:center;">xₙ₂</td><td style="text-align:center;">xₙ₃</td><td style="text-align:center;">xₙ₄</td><td style="text-align:center;">xₙ₅</td><td style="text-align:center;">xₙ₆</td><td style="text-align:center;">xₙ₇</td><td style="text-align:center;">xₙ₈</td></tr>
-              <tr class="highlight-row">
-                <td colspan="3"><strong>Nilai Maksimum Kolom (Max x_j)</strong></td>
-                <td style="text-align:center;"><strong>max(C1)</strong></td>
-                <td style="text-align:center;"><strong>max(C2)</strong></td>
-                <td style="text-align:center;"><strong>max(C3)</strong></td>
-                <td style="text-align:center;"><strong>max(C4)</strong></td>
-                <td style="text-align:center;"><strong>max(C5)</strong></td>
-                <td style="text-align:center;"><strong>max(C6)</strong></td>
-                <td style="text-align:center;"><strong>max(C7)</strong></td>
-                <td style="text-align:center;"><strong>max(C8)</strong></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- SLIDE 7: NORMALISASI MATRIKS R -->
-    <div class="slide" data-title="Normalisasi Matriks (R)" data-notes="Tahap berikutnya adalah normalisasi matriks R secara real-time. Karena seluruh kriteria bersifat benefit, setiap nilai x_ij dibagi dengan nilai tertinggi pada kolom kriteria tersebut (r_ij = x_ij / max). Skala ternormalisasi berkisar antara 0.0000 hingga 1.0000, memungkinkan perbandingan kinerja guru secara adil dan objektif.">
-      <div class="slide-header">
-        <span class="slide-badge">06. Proses Komputasi</span>
-        <h2 class="slide-title">Hasil Normalisasi Matriks (R) Dinamis</h2>
-        <p class="slide-subtitle">Transformasi nilai kinerja ke skala komparatif [0.0000 - 1.0000] (r_ij = x_ij / max)</p>
-      </div>
-      <div class="slide-content">
-        <div class="table-container">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Alternatif</th>
-                <th>Status Alternatif</th>
-                <th style="text-align:center;">r1</th>
-                <th style="text-align:center;">r2</th>
-                <th style="text-align:center;">r3</th>
-                <th style="text-align:center;">r4</th>
-                <th style="text-align:center;">r5</th>
-                <th style="text-align:center;">r6</th>
-                <th style="text-align:center;">r7</th>
-                <th style="text-align:center;">r8</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="highlight-row"><td><strong>A1</strong></td><td>Alternatif Pengajar 1</td><td style="text-align:center;">r₁₁</td><td style="text-align:center;">r₁₂</td><td style="text-align:center;">r₁₃</td><td style="text-align:center;">r₁₄</td><td style="text-align:center;">r₁₅</td><td style="text-align:center;">r₁₆</td><td style="text-align:center;">r₁₇</td><td style="text-align:center;">r₁₈</td></tr>
-              <tr><td><strong>A2</strong></td><td>Alternatif Pengajar 2</td><td style="text-align:center;">r₂₁</td><td style="text-align:center;">r₂₂</td><td style="text-align:center;">r₂₃</td><td style="text-align:center;">r₂₄</td><td style="text-align:center;">r₂₅</td><td style="text-align:center;">r₂₆</td><td style="text-align:center;">r₂₇</td><td style="text-align:center;">r₂₈</td></tr>
-              <tr><td><strong>A3</strong></td><td>Alternatif Pengajar 3</td><td style="text-align:center;">r₃₁</td><td style="text-align:center;">r₃₂</td><td style="text-align:center;">r₃₃</td><td style="text-align:center;">r₃₄</td><td style="text-align:center;">r₃₅</td><td style="text-align:center;">r₃₆</td><td style="text-align:center;">r₃₇</td><td style="text-align:center;">r₃₈</td></tr>
-              <tr><td><strong>A4</strong></td><td>Alternatif Pengajar 4</td><td style="text-align:center;">r₄₁</td><td style="text-align:center;">r₄₂</td><td style="text-align:center;">r₄₃</td><td style="text-align:center;">r₄₄</td><td style="text-align:center;">r₄₅</td><td style="text-align:center;">r₄₆</td><td style="text-align:center;">r₄₇</td><td style="text-align:center;">r₄₈</td></tr>
-              <tr><td><strong>A...</strong></td><td>Alternatif Pengajar n</td><td style="text-align:center;">rₙ₁</td><td style="text-align:center;">rₙ₂</td><td style="text-align:center;">rₙ₃</td><td style="text-align:center;">rₙ₄</td><td style="text-align:center;">rₙ₅</td><td style="text-align:center;">rₙ₆</td><td style="text-align:center;">rₙ₇</td><td style="text-align:center;">rₙ₈</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- SLIDE 8: HASIL & PERANGKINGAN -->
-    <div class="slide" data-title="Hasil Perangkingan" data-notes="Inilah alur penentuan peringkat preferensi V_i. Setiap baris nilai normalisasi r_ij dikalikan dengan bobot kriteria w_j. Guru dengan nilai preferensi tertinggi otomatis menduduki peringkat pertama sebagai rekomendasi Guru Terbaik Bimbel Nurul Fikri. Seluruh komputasi bersifat transparan dan dapat langsung diverifikasi di modul Perhitungan SAW.">
-      <div class="slide-header">
-        <span class="slide-badge">07. Luaran SPK</span>
-        <h2 class="slide-title">Format Perangkingan & Penetapan Rekomendasi</h2>
-        <p class="slide-subtitle">Kalkulasi nilai preferensi akhir V_i = &Sigma; (w_j &times; r_ij)</p>
-      </div>
-      <div class="slide-content">
-        <div class="grid-2">
-          <div class="table-container">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th style="text-align:center;">Rank</th>
-                  <th>Kandidat Pengajar</th>
-                  <th style="text-align:center;">Nilai (V)</th>
-                  <th>Status Rekomendasi</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="highlight-row">
-                  <td style="text-align:center; font-size:16px;">🥇</td>
-                  <td><strong>Peringkat 1 (Skor Tertinggi)</strong></td>
-                  <td style="text-align:center; color:var(--primary); font-weight:800;">Max (V)</td>
-                  <td><span class="badge-benefit">Sangat Direkomendasikan</span></td>
-                </tr>
-                <tr>
-                  <td style="text-align:center; font-size:16px;">🥈</td>
-                  <td>Peringkat 2</td>
-                  <td style="text-align:center; font-weight:700;">V₂</td>
-                  <td><span class="badge-benefit">Direkomendasikan (Top 3)</span></td>
-                </tr>
-                <tr>
-                  <td style="text-align:center; font-size:16px;">🥉</td>
-                  <td>Peringkat 3</td>
-                  <td style="text-align:center; font-weight:700;">V₃</td>
-                  <td><span class="badge-benefit">Direkomendasikan (Top 3)</span></td>
-                </tr>
-                <tr>
-                  <td style="text-align:center;">4</td>
-                  <td>Peringkat 4</td>
-                  <td style="text-align:center;">V₄</td>
-                  <td>Cukup</td>
-                </tr>
-                <tr>
-                  <td style="text-align:center;">...</td>
-                  <td>Peringkat Seterusnya</td>
-                  <td style="text-align:center;">Vₙ</td>
-                  <td>Cukup</td>
-                </tr>
-              </tbody>
-            </table>
+        <div class="grid-3">
+          <div class="card">
+            <span class="badge-tag">Modul 1: Dashboard</span>
+            <h4 class="card-title" style="margin-top: 6px;">Pusat Monitoring Terintegrasi</h4>
+            <ul class="bullet-list" style="margin-top: 6px;">
+              <li><div class="bullet-icon check">✓</div><span><strong>4 KPI Cards:</strong> Total guru, kriteria aktif, persentase nilai lengkap, & kandidat teratas.</span></li>
+              <li><div class="bullet-icon check">✓</div><span><strong>Workflow Stepper:</strong> Indikator visual alur SPK langkah 1 s.d. 5.</span></li>
+              <li><div class="bullet-icon check">✓</div><span><strong>Status Real-time:</strong> Menampilkan tanggal evaluasi aktif secara otomatis.</span></li>
+            </ul>
           </div>
-          <div class="card highlight">
-            <h3 class="card-title">Mekanisme Rekomendasi</h3>
-            <p class="card-desc" style="margin-bottom:12px;">Sistem menetapkan guru terbaik berdasarkan akumulasi skor preferensi tertinggi secara transparan dan terukur.</p>
-            <ul class="feature-list">
-              <li>
-                <div class="check-icon">✓</div>
-                <span><strong>Otomasi Perangkingan:</strong> Begitu nilai guru diinputkan, peringkat langsung tersusun otomatis dari skor tertinggi ke terendah.</span>
-              </li>
-              <li>
-                <div class="check-icon">✓</div>
-                <span><strong>Objektivitas Terjamin:</strong> Peringkat sepenuhnya mencerminkan bobot 8 kriteria tanpa intervensi subjektif.</span>
-              </li>
+          <div class="card">
+            <span class="badge-tag">Modul 2: Data Guru</span>
+            <h4 class="card-title" style="margin-top: 6px;">Master Data Pengajar</h4>
+            <ul class="bullet-list" style="margin-top: 6px;">
+              <li><div class="bullet-icon check">✓</div><span><strong>CRUD Lengkap:</strong> Tambah, edit, dan hapus guru dengan modal dialog modern.</span></li>
+              <li><div class="bullet-icon check">✓</div><span><strong>Fitur Tanggal Terdaftar:</strong> Auto-generate tanggal hari ini pada profil guru.</span></li>
+              <li><div class="bullet-icon check">✓</div><span><strong>Pencarian Cepat:</strong> Filter live berdasarkan nama, ID, atau mapel.</span></li>
+            </ul>
+          </div>
+          <div class="card">
+            <span class="badge-tag">Modul 3: Kriteria & Bobot</span>
+            <h4 class="card-title" style="margin-top: 6px;">Parameter SPK Terstandarisasi</h4>
+            <ul class="bullet-list" style="margin-top: 6px;">
+              <li><div class="bullet-icon check">✓</div><span><strong>8 Kriteria Benefit:</strong> Penguasaan materi (40%) sebagai kompetensi inti.</span></li>
+              <li><div class="bullet-icon check">✓</div><span><strong>Validasi Total Bobot:</strong> Sistem memperingatkan jika total bobot belum 100%.</span></li>
+              <li><div class="bullet-icon check">✓</div><span><strong>Tabel Normalisasi Bobot:</strong> Menampilkan bobot relatif (w_j) secara transparan.</span></li>
             </ul>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- SLIDE 9: ARSITEKTUR & TEKNOLOGI -->
-    <div class="slide" data-title="Arsitektur Sistem" data-notes="Sistem dibangun menggunakan arsitektur modern Single Page Application (SPA) berbasis React 18 dan Vite sebagai bundler generasi baru yang cepat. Desain antarmuka mengacu pada panduan visual modern SaaS dengan nuansa profesional khas Nurul Fikri, serta modularisasi 6 fitur utama tanpa dependensi yang berlebihan.">
+    <!-- SLIDE 8: DETAIL MODUL YANG DIKERJAKAN (BAGIAN 2) -->
+    <div class="slide" data-title="6. Modul Dikerjakan (Part 2)" data-notes="Pada bagian proses dan luaran: Modul Penilaian Guru kini telah dilengkapi pemilih tanggal evaluasi interaktif dan validasi skor 0-100. Modul Perhitungan SAW menyajikan tabulasi terpisah untuk matriks mentah X, matriks ternormalisasi R, dan rumus skor V. Serta modul Hasil dan Laporan menyediakan visualisasi podium Top 3, tombol ekspor CSV, dan dokumen cetak resmi yang otomatis memuat tanggal evaluasi dan kolom tanda tangan pimpinan.">
       <div class="slide-header">
-        <span class="slide-badge">08. Implementasi Teknis</span>
-        <h2 class="slide-title">Arsitektur & Tumpukan Teknologi (Tech Stack)</h2>
-        <p class="slide-subtitle">Fondasi pengembangan sistem yang ringan, cepat, dan terstruktur</p>
+        <span class="slide-badge">06. Rincian Modul (Bagian 2)</span>
+        <h2 class="slide-title">Rincian Modul yang Telah Dikerjakan (Evaluasi & Laporan)</h2>
+        <p class="slide-subtitle">Implementasi nyata pada Penilaian Guru, Komputasi SAW, dan Hasil & Laporan</p>
       </div>
       <div class="slide-content">
         <div class="grid-3">
           <div class="card">
-            <div class="card-icon">⚡</div>
-            <h3 class="card-title">Front-End Framework</h3>
-            <p class="card-desc"><strong>React 18 + Vite:</strong> SPA yang sangat responsif, proses komputasi state instan di sisi klien, dan waktu loading minimal.</p>
+            <span class="badge-tag">Modul 4: Penilaian Guru</span>
+            <h4 class="card-title" style="margin-top: 6px;">Input Evaluasi Berkala</h4>
+            <ul class="bullet-list" style="margin-top: 6px;">
+              <li><div class="bullet-icon check">✓</div><span><strong>Pemilih Tanggal Evaluasi:</strong> Fleksibel mencatat evaluasi harian atau periode berkala.</span></li>
+              <li><div class="bullet-icon check">✓</div><span><strong>Rubrik Nilai 0–100:</strong> Validasi ketat mencegah input negatif atau melebihi 100.</span></li>
+              <li><div class="bullet-icon check">✓</div><span><strong>Quick Fill Helper:</strong> Mempercepat pengisian nilai standar evaluasi.</span></li>
+            </ul>
+          </div>
+          <div class="card highlight">
+            <span class="badge-tag">Modul 5: Perhitungan SAW</span>
+            <h4 class="card-title" style="margin-top: 6px;">Transparansi Komputasi SAW</h4>
+            <ul class="bullet-list" style="margin-top: 6px;">
+              <li><div class="bullet-icon check">✓</div><span><strong>Tabulasi 4 Tahap:</strong> Matriks X, Matriks R (Benefit), Bobot W, dan Preferensi V.</span></li>
+              <li><div class="bullet-icon check">✓</div><span><strong>Akurasi 100%:</strong> Terbukti identik dengan perhitungan manual hingga 4 desimal.</span></li>
+              <li><div class="bullet-icon check">✓</div><span><strong>Salin Ringkasan:</strong> Tombol satu-klik untuk menyalin kalkulasi ke clipboard.</span></li>
+            </ul>
           </div>
           <div class="card">
-            <div class="card-icon">🎨</div>
-            <h3 class="card-title">Desain & UI Guideline</h3>
-            <p class="card-desc"><strong>Modern Futuristic SaaS:</strong> Menggunakan palet biru Nurul Fikri (#2563EB), kartu metrik informatif, dan ikonografi Lucide React.</p>
-          </div>
-          <div class="card">
-            <div class="card-icon">🧩</div>
-            <h3 class="card-title">Struktur 6 Modul Inti</h3>
-            <p class="card-desc">Dashboard, Data Guru, Kriteria & Bobot, Penilaian Guru, Perhitungan SAW, serta Hasil dan Laporan Siap Cetak.</p>
+            <span class="badge-tag">Modul 6: Hasil & Laporan</span>
+            <h4 class="card-title" style="margin-top: 6px;">Keputusan & Dokumen Resmi</h4>
+            <ul class="bullet-list" style="margin-top: 6px;">
+              <li><div class="bullet-icon check">✓</div><span><strong>Podium Juara Visual:</strong> Highlight emas, perak, dan perunggu Top 3 Guru.</span></li>
+              <li><div class="bullet-icon check">✓</div><span><strong>Cetak SK Otomatis:</strong> Kop resmi Bimbel NF, tanggal sinkron, & tanda tangan.</span></li>
+              <li><div class="bullet-icon check">✓</div><span><strong>Ekspor Berkas CSV:</strong> Unduh data peringkat untuk arsip administrasi.</span></li>
+            </ul>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- SLIDE 10: FITUR UTAMA APLIKASI -->
-    <div class="slide" data-title="Fitur Unggulan" data-notes="Berikut 4 keunggulan utama antarmuka sistem: 1. Dashboard informatif dengan KPI card, 2. Pengelolaan kriteria dan bobot yang dinamis dan terhindar dari salah hitung bobot, 3. Visualisasi bertahap perhitungan SAW yang mudah diaudit, dan 4. Fitur ekspor laporan yang kompatibel dengan print browser untuk arsip fisik.">
+    <!-- SLIDE 9: KUALITAS TEKNIS & KEUNGGULAN -->
+    <div class="slide" data-title="Kualitas Teknis Sistem" data-notes="Secara teknis, sistem ini dibangun dengan standar tinggi: Menggunakan React 18 dan Vite dengan arsitektur komponen reusable, tampilan modern futuristic SaaS yang bersih dan kontras, responsif diakses melalui laptop maupun smartphone, serta telah lolos uji build produksi Vite secara sempurna.">
       <div class="slide-header">
-        <span class="slide-badge">09. Keunggulan Sistem</span>
-        <h2 class="slide-title">Fitur-Fitur Unggulan Aplikasi</h2>
-        <p class="slide-subtitle">Solusi terintegrasi dari input data hingga laporan akreditasi</p>
+        <span class="slide-badge">07. Standar Mutu Teknis</span>
+        <h2 class="slide-title">Kualitas Teknis & Pengalaman Pengguna (UI/UX)</h2>
+        <p class="slide-subtitle">Fondasi arsitektur perangkat lunak yang ringan, cepat, dan handal</p>
       </div>
       <div class="slide-content">
         <div class="grid-4">
           <div class="card">
-            <div class="card-icon">📊</div>
-            <h4 class="card-title" style="font-size:14px;">Dashboard Eksekutif</h4>
-            <p class="card-desc" style="font-size:12px;">Menampilkan ringkasan metrik total guru, kriteria aktif, dan top 3 kandidat guru terbaik.</p>
+            <div class="card-icon">⚡</div>
+            <h4 class="card-title" style="font-size: 13.5px;">Performa Tinggi</h4>
+            <p class="card-desc" style="font-size: 12px;">React 18 + Vite menghasilkan Single Page Application dengan loading instan dan komputasi state seketika.</p>
           </div>
           <div class="card">
-            <div class="card-icon">⚖️</div>
-            <h4 class="card-title" style="font-size:14px;">Validasi Bobot Otomatis</h4>
-            <p class="card-desc" style="font-size:12px;">Peringatan real-time bila total bobot belum 100% sehingga audit penilaian selalu sah.</p>
+            <div class="card-icon">📱</div>
+            <h4 class="card-title" style="font-size: 13.5px;">Responsif</h4>
+            <p class="card-desc" style="font-size: 12px;">Tata letak adaptif mulai dari monitor desktop, tablet, hingga layar smartphone tanpa ada elemen yang terpotong.</p>
           </div>
           <div class="card">
-            <div class="card-icon">🔍</div>
-            <h4 class="card-title" style="font-size:14px;">Transparansi Matriks</h4>
-            <p class="card-desc" style="font-size:12px;">Menyediakan tab terpisah untuk Matriks X, Matriks R, Bobot W, dan Hasil Akhir V.</p>
+            <div class="card-icon">🛡️</div>
+            <h4 class="card-title" style="font-size: 13.5px;">Validasi Cerdas</h4>
+            <p class="card-desc" style="font-size: 12px;">Setiap input data guru, bobot, dan nilai memiliki pengaman validasi untuk mencegah kesalahan data masuk.</p>
           </div>
           <div class="card">
-            <div class="card-icon">🖨️</div>
-            <h4 class="card-title" style="font-size:14px;">Cetak Laporan Resmi</h4>
-            <p class="card-desc" style="font-size:12px;">Format laporan siap cetak browser lengkap dengan kolom tanda tangan pimpinan bimbel.</p>
+            <div class="card-icon">🚀</div>
+            <h4 class="card-title" style="font-size: 13.5px;">Build Terverifikasi</h4>
+            <p class="card-desc" style="font-size: 12px;">Lolos kompilasi produksi 100% tanpa error, dan kode tersinkronisasi aman di repositori GitHub.</p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- SLIDE 11: KESIMPULAN -->
-    <div class="slide" data-title="Kesimpulan" data-notes="Kesimpulannya, sistem pendukung keputusan pemilihan guru terbaik dengan metode SAW ini telah berhasil dibangun dan divalidasi. Sistem mampu mengeliminasi bias subjektif, mempercepat proses penilaian secara signifikan, dan menjamin akuntabilitas hasil evaluasi. Untuk pengembangan ke depan, sistem dapat diintegrasikan dengan absensi digital dan evaluasi siswa berbasis survei daring.">
-      <div class="slide-header">
-        <span class="slide-badge">10. Penutup</span>
-        <h2 class="slide-title">Kesimpulan & Rekomendasi Pengembangan</h2>
-        <p class="slide-subtitle">Ringkasan capaian proyek dan potensi integrasi di masa mendatang</p>
-      </div>
-      <div class="slide-content">
-        <div class="grid-2">
-          <div class="card">
-            <h3 class="card-title">Kesimpulan Capaian Proyek</h3>
-            <ul class="feature-list" style="margin-top: 10px;">
-              <li>
-                <div class="check-icon">✓</div>
-                <span><strong>Validitas 100%:</strong> Algoritma SAW terbukti akurat dan konsisten secara matematis terhadap data riil simulasi.</span>
-              </li>
-              <li>
-                <div class="check-icon">✓</div>
-                <span><strong>Efisiensi Tinggi:</strong> Rekapitulasi penilaian guru diselesaikan secara instan tanpa risiko kelalaian kalkulasi.</span>
-              </li>
-              <li>
-                <div class="check-icon">✓</div>
-                <span><strong>Kepatuhan SOT:</strong> Seluruh 6 modul PRD dan standar visual UI Guideline berhasil diimplementasikan.</span>
-              </li>
-            </ul>
-          </div>
-          <div class="card">
-            <h3 class="card-title">Rencana Pengembangan Lanjutan</h3>
-            <ul class="feature-list" style="margin-top: 10px;">
-              <li>
-                <div class="check-icon" style="background:#e0f2fe; color:#0284c7;">&rarr;</div>
-                <span><strong>Integrasi Presensi Biometrik:</strong> Mengambil data presensi C1 secara otomatis dari sistem mesin absen.</span>
-              </li>
-              <li>
-                <div class="check-icon" style="background:#e0f2fe; color:#0284c7;">&rarr;</div>
-                <span><strong>Survei Siswa Online:</strong> Kriteria kualitas mengajar (C3) bersumber langsung dari kuesioner siswa via web/aplikasi.</span>
-              </li>
-              <li>
-                <div class="check-icon" style="background:#e0f2fe; color:#0284c7;">&rarr;</div>
-                <span><strong>Database Cloud Terpusat:</strong> Penyimpanan data multi-cabang Nurul Fikri secara tersinkronisasi.</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SLIDE 12: SESI TANYA JAWAB (Q&A) -->
-    <div class="slide slide-title-hero" data-title="Sesi Tanya Jawab" data-notes="Sekian presentasi dari saya mengenai Sistem Pendukung Keputusan Pemilihan Guru Terbaik Bimbel Nurul Fikri menggunakan metode SAW. Saya mengucapkan terima kasih banyak atas perhatian bapak/ibu dosen dan teman-teman sekalian. Sekarang saya membuka sesi tanya jawab atau tanggapan.">
-      <span class="hero-badge">SESI TANYA JAWAB (Q&A)</span>
-      <h1 style="font-size: 40px; margin-bottom: 24px;">Terima Kasih!</h1>
-      <p class="hero-sub" style="font-size: 18px; margin-bottom: 36px;">
-        Silakan jika ada pertanyaan, kritik, maupun masukan membangun terkait implementasi sistem dan metode SAW ini.
+    <!-- SLIDE 10: KESIMPULAN & PENUTUP -->
+    <div class="slide slide-title-hero" data-title="Kesimpulan & Penutup" data-notes="Sebagai kesimpulan: Seluruh tahapan pembangunan SPK Pemilihan Guru Terbaik Bimbel Nurul Fikri telah selesai dengan hasil yang sangat memuaskan. Sistem mampu mentransformasi evaluasi konvensional menjadi proses yang cepat, akurat, dan transparan. Terima kasih banyak atas bimbingan dan perhatian bapak/ibu dosen. Saya membuka sesi tanya jawab untuk menerima masukan dan diskusi lebih lanjut.">
+      <span class="hero-badge">KESIMPULAN & PENUTUP</span>
+      <h1 style="font-size: 38px; margin-bottom: 20px;">Terima Kasih!</h1>
+      <p class="hero-sub" style="font-size: 16px; margin-bottom: 30px;">
+        Sistem Pendukung Keputusan Pemilihan Guru Terbaik Bimbingan Belajar Nurul Fikri (Metode SAW) telah berhasil dibangun, terintegrasi penuh, dan siap digunakan.
       </p>
       <div class="hero-meta">
         <div>
-          <span class="label">Aplikasi</span>
-          <strong>SPK Guru Terbaik Bimbel NF</strong>
+          <span class="label">Repositori Proyek</span>
+          <strong style="color: #60a5fa;">github.com/dedesurah01/SPK-Guru-Terbaik</strong>
         </div>
         <div>
-          <span class="label">Status Pengujian</span>
-          <strong style="color:#4ade80;">100% Terverifikasi Lolos Uji</strong>
+          <span class="label">Hasil Pengujian</span>
+          <strong style="color: #4ade80;">100% Lolos Validasi & Siap Sidang</strong>
         </div>
       </div>
     </div>
 
-    <!-- Bottom Deck Controls -->
+    <!-- Bottom Controls -->
     <div class="deck-footer">
-      <div id="slideCounter">Slide 1 dari 12</div>
+      <div id="slideCounter">Slide 1 dari 10</div>
       <div id="slideTitleCurrent" style="font-weight:600; color:var(--navy);">Judul Proyek</div>
       <div class="nav-buttons">
         <button class="btn-nav" onclick="prevSlide()" title="Slide Sebelumnya (Panah Kiri)">◀</button>
@@ -1057,7 +989,7 @@
     </div>
   </div>
 
-  <!-- Keyboard Shortcuts Hint -->
+  <!-- Keyboard Shortcuts Guide -->
   <div class="keyboard-hint">
     <span>Navigasi: <kbd>&larr;</kbd> <kbd>&rarr;</kbd> atau <kbd>Space</kbd></span>
     <span>Layar Penuh: <kbd>F</kbd></span>
@@ -1065,7 +997,7 @@
     <span>Cetak PDF: <kbd>Ctrl + P</kbd></span>
   </div>
 
-  <!-- Slide Logic Script -->
+  <!-- Script Logic -->
   <script>
     const slides = document.querySelectorAll('.slide');
     const slideCounter = document.getElementById('slideCounter');
@@ -1123,7 +1055,6 @@
       }
     }
 
-    // Keyboard Events
     document.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
         e.preventDefault();
@@ -1138,9 +1069,7 @@
       }
     });
 
-    // Initialize first slide
     updateSlide(0);
   </script>
 </body>
 </html>
-
