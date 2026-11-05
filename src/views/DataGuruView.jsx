@@ -11,14 +11,25 @@ import {
   AlertCircle,
   UserCheck,
   GraduationCap,
-  Calendar
+  Calendar,
+  Database,
+  RefreshCw
 } from 'lucide-react';
 import { useSpk } from '../context/SpkContext';
 import Modal from '../components/Modal';
 import ConfirmDialog from '../components/ConfirmDialog';
 
 export default function DataGuruView() {
-  const { guruList, addGuru, updateGuru, deleteGuru, resetGuruToDefault } = useSpk();
+  const { 
+    guruList, 
+    addGuru, 
+    updateGuru, 
+    deleteGuru, 
+    resetGuruToDefault,
+    isDbConnected,
+    isLoadingGuru,
+    refreshGuruFromDb
+  } = useSpk();
 
   // Search & Filter State
   const [searchQuery, setSearchQuery] = useState('');
@@ -28,6 +39,7 @@ export default function DataGuruView() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState('add'); // 'add' | 'edit'
   const [editingGuruId, setEditingGuruId] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Form Fields
   const [formData, setFormData] = useState({
@@ -105,8 +117,8 @@ export default function DataGuruView() {
     setIsModalOpen(true);
   };
 
-  // Validate & Save Form
-  const handleSave = (e) => {
+  // Validate & Save Form (Async dengan dukungan MySQL API)
+  const handleSave = async (e) => {
     e.preventDefault();
     const errors = {};
 
@@ -131,29 +143,35 @@ export default function DataGuruView() {
     }
 
     const savedDate = formData.tanggalBergabung || new Date().toISOString().split('T')[0];
+    setIsSubmitting(true);
 
-    if (modalMode === 'add') {
-      addGuru({
-        id: formData.id.trim(),
-        nama: formData.nama.trim(),
-        mapel: formData.mapel.trim(),
-        pengalaman: formData.pengalaman.trim() || '1 Tahun',
-        status: formData.status,
-        tanggalBergabung: savedDate
-      });
-      showToast(`Guru ${formData.nama} berhasil ditambahkan!`);
-    } else {
-      updateGuru(editingGuruId, {
-        nama: formData.nama.trim(),
-        mapel: formData.mapel.trim(),
-        pengalaman: formData.pengalaman.trim() || '1 Tahun',
-        status: formData.status,
-        tanggalBergabung: savedDate
-      });
-      showToast(`Data guru ${formData.nama} berhasil diperbarui!`);
+    try {
+      if (modalMode === 'add') {
+        await addGuru({
+          id: formData.id.trim(),
+          nama: formData.nama.trim(),
+          mapel: formData.mapel.trim(),
+          pengalaman: formData.pengalaman.trim() || '1 Tahun',
+          status: formData.status,
+          tanggalBergabung: savedDate
+        });
+        showToast(`Guru ${formData.nama} berhasil disimpan ke ${isDbConnected ? 'MySQL' : 'penyimpanan lokal'}!`);
+      } else {
+        await updateGuru(editingGuruId, {
+          nama: formData.nama.trim(),
+          mapel: formData.mapel.trim(),
+          pengalaman: formData.pengalaman.trim() || '1 Tahun',
+          status: formData.status,
+          tanggalBergabung: savedDate
+        });
+        showToast(`Data guru ${formData.nama} berhasil diperbarui di ${isDbConnected ? 'MySQL' : 'penyimpanan lokal'}!`);
+      }
+      setIsModalOpen(false);
+    } catch (err) {
+      showToast(`Terjadi kendala saat menyimpan: ${err.message}`, 'error');
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setIsModalOpen(false);
   };
 
   // Handle Delete Request
@@ -162,11 +180,16 @@ export default function DataGuruView() {
     setIsConfirmOpen(true);
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (deleteTarget) {
-      deleteGuru(deleteTarget.id);
-      showToast(`Data guru ${deleteTarget.nama} telah dihapus.`, 'info');
-      setDeleteTarget(null);
+      try {
+        await deleteGuru(deleteTarget.id);
+        showToast(`Data guru ${deleteTarget.nama} telah dihapus.`, 'info');
+      } catch (err) {
+        showToast(`Gagal menghapus: ${err.message}`, 'error');
+      } finally {
+        setDeleteTarget(null);
+      }
     }
   };
 
@@ -218,7 +241,44 @@ export default function DataGuruView() {
             </div>
           </div>
 
-          <div className="toolbar-right">
+          <div className="toolbar-right" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {/* Indikator Status Database MySQL */}
+            <div 
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontSize: '12px',
+                fontWeight: 600,
+                padding: '6px 12px',
+                borderRadius: '6px',
+                backgroundColor: isDbConnected ? '#ecfdf5' : '#fef3c7',
+                color: isDbConnected ? '#065f46' : '#92400e',
+                border: `1px solid ${isDbConnected ? '#a7f3d0' : '#fde68a'}`
+              }}
+              title={isDbConnected ? 'Terhubung langsung ke MySQL Database' : 'Server backend belum aktif, menggunakan penyimpanan browser'}
+            >
+              <Database size={14} />
+              <span>{isDbConnected ? 'MySQL Aktif' : 'Offline Mode'}</span>
+              <button
+                type="button"
+                onClick={refreshGuruFromDb}
+                disabled={isLoadingGuru}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: '2px',
+                  display: 'inline-flex',
+                  color: 'inherit',
+                  marginLeft: '2px'
+                }}
+                title="Sinkronkan / Muat ulang dari MySQL"
+              >
+                <RefreshCw size={12} className={isLoadingGuru ? 'animate-spin' : ''} />
+              </button>
+            </div>
+
             <button
               onClick={resetGuruToDefault}
               className="btn btn-secondary btn-icon"
@@ -452,8 +512,15 @@ export default function DataGuruView() {
             >
               Batal
             </button>
-            <button type="submit" className="btn btn-primary">
-              {modalMode === 'add' ? 'Simpan Guru' : 'Simpan Perubahan'}
+            <button 
+              type="submit" 
+              className="btn btn-primary"
+              disabled={isSubmitting}
+            >
+              {isSubmitting 
+                ? 'Menyimpan ke Database...' 
+                : modalMode === 'add' ? 'Simpan Guru' : 'Simpan Perubahan'
+              }
             </button>
           </div>
         </form>

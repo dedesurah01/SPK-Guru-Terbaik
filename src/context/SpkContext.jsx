@@ -1,6 +1,13 @@
-import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import { KRITERIA_SIMULASI, GURU_SIMULASI, NILAI_SIMULASI_DEFAULT } from '../data/simulationData';
 import { calculateSaw } from '../utils/sawCalculation';
+import { 
+  checkApiHealth, 
+  fetchGuruFromDb, 
+  createGuruInDb, 
+  updateGuruInDb, 
+  deleteGuruFromDb 
+} from '../services/api';
 
 const SpkContext = createContext();
 
@@ -57,6 +64,38 @@ export function SpkProvider({ children }) {
     }
   });
 
+  // Database Connection State
+  const [isDbConnected, setIsDbConnected] = useState(false);
+  const [isLoadingGuru, setIsLoadingGuru] = useState(false);
+
+  // Fetch Guru dari MySQL Backend
+  const refreshGuruFromDb = useCallback(async () => {
+    setIsLoadingGuru(true);
+    try {
+      const isOnline = await checkApiHealth();
+      if (isOnline) {
+        setIsDbConnected(true);
+        const dataFromDb = await fetchGuruFromDb();
+        setGuruList(dataFromDb);
+        return { success: true, count: dataFromDb.length };
+      } else {
+        setIsDbConnected(false);
+        return { success: false, reason: 'offline' };
+      }
+    } catch (err) {
+      console.warn('Gagal memuat data dari database MySQL:', err);
+      setIsDbConnected(false);
+      return { success: false, error: err.message };
+    } finally {
+      setIsLoadingGuru(false);
+    }
+  }, []);
+
+  // Sync saat pertama kali aplikasi dimuat
+  useEffect(() => {
+    refreshGuruFromDb();
+  }, [refreshGuruFromDb]);
+
   // Save to LocalStorage
   useEffect(() => {
     try {
@@ -90,19 +129,55 @@ export function SpkProvider({ children }) {
     }
   }, [tanggalPenilaian]);
 
-  // Operations: Guru
-  const addGuru = (newGuru) => {
-    setGuruList((prev) => [...prev, newGuru]);
+  // Operations: Guru (dengan dukungan MySQL API & fallback)
+  const addGuru = async (newGuru) => {
+    if (isDbConnected) {
+      try {
+        const savedGuru = await createGuruInDb(newGuru);
+        setGuruList((prev) => [...prev, savedGuru]);
+        return savedGuru;
+      } catch (err) {
+        console.error('Gagal simpan guru ke DB, fallback ke local:', err);
+        setGuruList((prev) => [...prev, newGuru]);
+        throw err;
+      }
+    } else {
+      setGuruList((prev) => [...prev, newGuru]);
+      return newGuru;
+    }
   };
 
-  const updateGuru = (id, updatedData) => {
-    setGuruList((prev) =>
-      prev.map((g) => (g.id === id ? { ...g, ...updatedData } : g))
-    );
+  const updateGuru = async (id, updatedData) => {
+    if (isDbConnected) {
+      try {
+        const savedGuru = await updateGuruInDb(id, updatedData);
+        setGuruList((prev) =>
+          prev.map((g) => (g.id === id || g.kode_guru === id ? { ...g, ...savedGuru } : g))
+        );
+        return savedGuru;
+      } catch (err) {
+        console.error('Gagal update guru ke DB, fallback ke local:', err);
+        setGuruList((prev) =>
+          prev.map((g) => (g.id === id ? { ...g, ...updatedData } : g))
+        );
+        throw err;
+      }
+    } else {
+      setGuruList((prev) =>
+        prev.map((g) => (g.id === id ? { ...g, ...updatedData } : g))
+      );
+    }
   };
 
-  const deleteGuru = (id) => {
-    setGuruList((prev) => prev.filter((g) => g.id !== id));
+  const deleteGuru = async (id) => {
+    if (isDbConnected) {
+      try {
+        await deleteGuruFromDb(id);
+      } catch (err) {
+        console.error('Gagal hapus guru dari DB:', err);
+      }
+    }
+    setGuruList((prev) => prev.filter((g) => g.id !== id && g.kode_guru !== id));
     setPenilaianMap((prev) => {
       const next = { ...prev };
       delete next[id];
@@ -190,6 +265,9 @@ export function SpkProvider({ children }) {
     tanggalPenilaian,
     setTanggalPenilaian,
     sawResults,
+    isDbConnected,
+    isLoadingGuru,
+    refreshGuruFromDb,
     addGuru,
     updateGuru,
     deleteGuru,
