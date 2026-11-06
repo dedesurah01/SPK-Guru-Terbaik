@@ -242,7 +242,7 @@ export default function DataGuruView() {
           </div>
 
           <div className="toolbar-right" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            {/* Indikator Status Database MySQL */}
+            {/* Indikator Status Database MySQL (dikomentari agar tidak muncul)
             <div 
               style={{
                 display: 'inline-flex',
@@ -278,7 +278,9 @@ export default function DataGuruView() {
                 <RefreshCw size={12} className={isLoadingGuru ? 'animate-spin' : ''} />
               </button>
             </div>
+            */}
 
+            {/* Tombol Reset Data Contoh (dikomentari agar tidak muncul)
             <button
               onClick={resetGuruToDefault}
               className="btn btn-secondary btn-icon"
@@ -287,6 +289,7 @@ export default function DataGuruView() {
               <RotateCcw size={16} />
               <span>Reset Data Contoh</span>
             </button>
+            */}
 
             <button
               onClick={handleOpenAdd}
