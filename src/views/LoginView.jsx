@@ -77,7 +77,7 @@ export default function LoginView() {
             </p>
           </div>
 
-          {/* Demo notice */}
+          {/* Demo notice (dikomentari agar tidak muncul di tampilan)
           <div className="login-demo-notice">
             <AlertCircle size={14} />
             <div>
@@ -89,6 +89,7 @@ export default function LoginView() {
               </p>
             </div>
           </div>
+          */}
 
           {/* Form */}
           <form className="login-form" onSubmit={handleSubmit} noValidate>
