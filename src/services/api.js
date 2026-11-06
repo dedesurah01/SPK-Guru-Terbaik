@@ -114,3 +114,85 @@ export async function deleteGuruFromDb(id) {
   }
 }
 
+/**
+ * Mengambil data nilai penilaian dan tanggal evaluasi dari MySQL
+ */
+export async function fetchPenilaianFromDb() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/penilaian`);
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    const result = await res.json();
+    return result.data || { penilaianMap: {}, tanggalPenilaian: null };
+  } catch (error) {
+    console.warn('[API] Gagal mengambil data penilaian dari MySQL backend:', error.message);
+    throw error;
+  }
+}
+
+/**
+ * Menyimpan nilai seorang guru ke database MySQL
+ */
+export async function saveGuruScoresInDb(kodeGuru, scores) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/penilaian`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        kode_guru: kodeGuru,
+        scores
+      })
+    });
+
+    const result = await res.json();
+    if (!res.ok) {
+      throw new Error(result.message || 'Gagal menyimpan nilai guru ke database');
+    }
+    return result;
+  } catch (error) {
+    console.error(`[API] Error saveGuruScoresInDb (${kodeGuru}):`, error);
+    throw error;
+  }
+}
+
+/**
+ * Menyimpan tanggal evaluasi ke database MySQL
+ */
+export async function saveTanggalPenilaianInDb(tanggal) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/penilaian/tanggal`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ tanggal })
+    });
+
+    const result = await res.json();
+    if (!res.ok) {
+      throw new Error(result.message || 'Gagal menyimpan tanggal evaluasi');
+    }
+    return result;
+  } catch (error) {
+    console.error('[API] Error saveTanggalPenilaianInDb:', error);
+    throw error;
+  }
+}
+
+/**
+ * Menghapus nilai guru dari database MySQL
+ */
+export async function deleteGuruScoresFromDb(kodeGuru) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/penilaian/${encodeURIComponent(kodeGuru)}`, {
+      method: 'DELETE'
+    });
+    return await res.json();
+  } catch (error) {
+    console.error(`[API] Error deleteGuruScoresFromDb (${kodeGuru}):`, error);
+  }
+}
+

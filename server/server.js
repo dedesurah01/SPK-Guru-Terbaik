@@ -5,6 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { testConnection } from './db.js';
 import guruRoutes from './routes/guruRoutes.js';
+import penilaianRoutes from './routes/penilaianRoutes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,6 +27,7 @@ app.use((req, res, next) => {
 
 // Endpoint Routes
 app.use('/api/guru', guruRoutes);
+app.use('/api/penilaian', penilaianRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

@@ -6,7 +6,11 @@ import {
   fetchGuruFromDb, 
   createGuruInDb, 
   updateGuruInDb, 
-  deleteGuruFromDb 
+  deleteGuruFromDb,
+  fetchPenilaianFromDb,
+  saveGuruScoresInDb,
+  saveTanggalPenilaianInDb,
+  deleteGuruScoresFromDb
 } from '../services/api';
 
 const SpkContext = createContext();
@@ -68,15 +72,46 @@ export function SpkProvider({ children }) {
   const [isDbConnected, setIsDbConnected] = useState(false);
   const [isLoadingGuru, setIsLoadingGuru] = useState(false);
 
-  // Fetch Guru dari MySQL Backend
+  // Fetch Guru & Penilaian dari MySQL Backend
   const refreshGuruFromDb = useCallback(async () => {
     setIsLoadingGuru(true);
     try {
       const isOnline = await checkApiHealth();
       if (isOnline) {
         setIsDbConnected(true);
+        // 1. Ambil data guru dari MySQL
         const dataFromDb = await fetchGuruFromDb();
         setGuruList(dataFromDb);
+
+        // 2. Ambil data penilaian & tanggal evaluasi dari MySQL
+        const { penilaianMap: dbPenilaian, tanggalPenilaian: dbTanggal } = await fetchPenilaianFromDb();
+        
+        const hasDbScores = dbPenilaian && Object.keys(dbPenilaian).length > 0;
+        if (hasDbScores) {
+          setPenilaianMap(dbPenilaian);
+          localStorage.setItem(STORAGE_KEY_PENILAIAN, JSON.stringify(dbPenilaian));
+        } else {
+          // Jika DB penilaian masih kosong tapi di localStorage sudah ada nilai, migrasikan ke MySQL!
+          const localScores = localStorage.getItem(STORAGE_KEY_PENILAIAN);
+          if (localScores) {
+            try {
+              const parsedLocal = JSON.parse(localScores);
+              if (parsedLocal && Object.keys(parsedLocal).length > 0) {
+                for (const [guruId, scores] of Object.entries(parsedLocal)) {
+                  await saveGuruScoresInDb(guruId, scores);
+                }
+              }
+            } catch (e) {
+              console.warn('Gagal migrasi nilai lokal ke MySQL:', e);
+            }
+          }
+        }
+
+        if (dbTanggal) {
+          setTanggalPenilaian(dbTanggal);
+          localStorage.setItem(STORAGE_KEY_TANGGAL_PENILAIAN, dbTanggal);
+        }
+
         return { success: true, count: dataFromDb.length };
       } else {
         setIsDbConnected(false);
@@ -173,6 +208,7 @@ export function SpkProvider({ children }) {
     if (isDbConnected) {
       try {
         await deleteGuruFromDb(id);
+        await deleteGuruScoresFromDb(id);
       } catch (err) {
         console.error('Gagal hapus guru dari DB:', err);
       }
@@ -200,8 +236,8 @@ export function SpkProvider({ children }) {
     setKriteriaList(KRITERIA_SIMULASI);
   };
 
-  // Operations: Penilaian Guru
-  const setGuruScores = (guruId, scores) => {
+  // Operations: Penilaian Guru (Sinkron ke MySQL & Local)
+  const setGuruScores = async (guruId, scores) => {
     setPenilaianMap((prev) => ({
       ...prev,
       [guruId]: {
@@ -209,14 +245,29 @@ export function SpkProvider({ children }) {
         ...scores
       }
     }));
+
+    if (isDbConnected) {
+      try {
+        await saveGuruScoresInDb(guruId, scores);
+      } catch (err) {
+        console.warn('Gagal menyimpan nilai guru ke MySQL:', err);
+      }
+    }
   };
 
-  const fillDefaultScores = (guruId) => {
+  const fillDefaultScores = async (guruId) => {
     const defaultScores = {};
     kriteriaList.forEach((k) => {
       defaultScores[k.kode] = 80;
     });
-    setGuruScores(guruId, defaultScores);
+    await setGuruScores(guruId, defaultScores);
+  };
+
+  const updateTanggalPenilaian = (newDate) => {
+    setTanggalPenilaian(newDate);
+    if (isDbConnected) {
+      saveTanggalPenilaianInDb(newDate).catch(console.warn);
+    }
   };
 
   const resetPenilaianToDefault = () => {
@@ -263,7 +314,7 @@ export function SpkProvider({ children }) {
     penilaianMap,
     totalBobot,
     tanggalPenilaian,
-    setTanggalPenilaian,
+    setTanggalPenilaian: updateTanggalPenilaian,
     sawResults,
     isDbConnected,
     isLoadingGuru,

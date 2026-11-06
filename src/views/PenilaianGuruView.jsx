@@ -12,7 +12,9 @@ import {
   Info,
   ArrowRight,
   TrendingUp,
-  Calendar
+  Calendar,
+  Database,
+  RefreshCw
 } from 'lucide-react';
 import { useSpk } from '../context/SpkContext';
 import Modal from '../components/Modal';
@@ -28,7 +30,10 @@ export default function PenilaianGuruView({ onNavigate }) {
     isGuruComplete,
     completeness,
     tanggalPenilaian,
-    setTanggalPenilaian
+    setTanggalPenilaian,
+    isDbConnected,
+    isLoadingGuru,
+    refreshGuruFromDb
   } = useSpk();
 
   // Search & Filter
@@ -40,6 +45,7 @@ export default function PenilaianGuruView({ onNavigate }) {
   const [selectedGuru, setSelectedGuru] = useState(null);
   const [scoresInput, setScoresInput] = useState({});
   const [errorsInput, setErrorsInput] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Toast Feedback
   const [toastMessage, setToastMessage] = useState(null);
@@ -83,8 +89,8 @@ export default function PenilaianGuruView({ onNavigate }) {
     setIsModalOpen(true);
   };
 
-  // Save Modal Input
-  const handleSaveScores = (e) => {
+  // Save Modal Input (Async dengan dukungan MySQL)
+  const handleSaveScores = async (e) => {
     e.preventDefault();
     const errors = {};
     const sanitizedScores = {};
@@ -110,14 +116,21 @@ export default function PenilaianGuruView({ onNavigate }) {
       return;
     }
 
-    setGuruScores(selectedGuru.id, sanitizedScores);
-    showToast(`Nilai evaluasi ${selectedGuru.nama} berhasil disimpan!`);
-    setIsModalOpen(false);
+    setIsSubmitting(true);
+    try {
+      await setGuruScores(selectedGuru.id, sanitizedScores);
+      showToast(`Nilai evaluasi ${selectedGuru.nama} berhasil disimpan ke ${isDbConnected ? 'MySQL' : 'penyimpanan lokal'}!`);
+      setIsModalOpen(false);
+    } catch (err) {
+      showToast(`Gagal menyimpan nilai: ${err.message}`, 'error');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Quick fill default for a teacher
-  const handleQuickFill = (guru) => {
-    fillDefaultScores(guru.id);
+  const handleQuickFill = async (guru) => {
+    await fillDefaultScores(guru.id);
     showToast(`Nilai standar (80) telah diisikan untuk ${guru.nama}.`);
   };
 
@@ -259,7 +272,44 @@ export default function PenilaianGuruView({ onNavigate }) {
             </div>
           </div>
 
-          <div className="toolbar-right" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div className="toolbar-right" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            {/* Status Database MySQL */}
+            <div 
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontSize: '12px',
+                fontWeight: 600,
+                padding: '6px 12px',
+                borderRadius: '6px',
+                backgroundColor: isDbConnected ? '#ecfdf5' : '#fef3c7',
+                color: isDbConnected ? '#065f46' : '#92400e',
+                border: `1px solid ${isDbConnected ? '#a7f3d0' : '#fde68a'}`
+              }}
+              title={isDbConnected ? 'Nilai tersimpan langsung ke MySQL Database' : 'Server backend belum aktif, menggunakan penyimpanan browser'}
+            >
+              <Database size={14} />
+              <span>{isDbConnected ? 'MySQL Aktif' : 'Offline'}</span>
+              <button
+                type="button"
+                onClick={refreshGuruFromDb}
+                disabled={isLoadingGuru}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: '2px',
+                  display: 'inline-flex',
+                  color: 'inherit',
+                  marginLeft: '2px'
+                }}
+                title="Sinkronkan nilai dari MySQL"
+              >
+                <RefreshCw size={12} className={isLoadingGuru ? 'animate-spin' : ''} />
+              </button>
+            </div>
+
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#F8FAFC', padding: '6px 12px', borderRadius: '8px', border: '1px solid var(--color-border)' }}>
               <Calendar size={16} color="var(--color-primary)" />
               <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-navy)', whiteSpace: 'nowrap' }}>
@@ -532,8 +582,12 @@ export default function PenilaianGuruView({ onNavigate }) {
               >
                 Batal
               </button>
-              <button type="submit" className="btn btn-primary">
-                Simpan Nilai Evaluasi
+              <button 
+                type="submit" 
+                className="btn btn-primary"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Menyimpan ke MySQL...' : 'Simpan Nilai Evaluasi'}
               </button>
             </div>
           </form>
