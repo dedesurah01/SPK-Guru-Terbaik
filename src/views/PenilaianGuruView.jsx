@@ -273,7 +273,7 @@ export default function PenilaianGuruView({ onNavigate }) {
           </div>
 
           <div className="toolbar-right" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            {/* Status Database MySQL */}
+            {/* Status Database MySQL (dikomentari agar tidak muncul)
             <div 
               style={{
                 display: 'inline-flex',
@@ -309,6 +309,7 @@ export default function PenilaianGuruView({ onNavigate }) {
                 <RefreshCw size={12} className={isLoadingGuru ? 'animate-spin' : ''} />
               </button>
             </div>
+            */}
 
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#F8FAFC', padding: '6px 12px', borderRadius: '8px', border: '1px solid var(--color-border)' }}>
               <Calendar size={16} color="var(--color-primary)" />
