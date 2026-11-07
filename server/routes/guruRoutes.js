@@ -8,7 +8,11 @@ function formatGuruRow(row) {
   let tanggalBergabung = '';
   if (row.created_at) {
     try {
-      tanggalBergabung = new Date(row.created_at).toISOString().split('T')[0];
+      const d = new Date(row.created_at);
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      tanggalBergabung = `${year}-${month}-${day}`;
     } catch {
       tanggalBergabung = new Date().toISOString().split('T')[0];
     }
@@ -78,13 +82,14 @@ router.get('/:id', async (req, res) => {
 
 // 3. POST /api/guru - Tambah guru baru
 router.post('/', async (req, res) => {
-  const { id, kode_guru, nama, nama_guru, mapel, mata_pelajaran, pengalaman, status } = req.body;
+  const { id, kode_guru, nama, nama_guru, mapel, mata_pelajaran, pengalaman, status, tanggalBergabung, created_at } = req.body;
 
   const finalKode = (kode_guru || id || '').trim();
   const finalNama = (nama_guru || nama || '').trim();
   const finalMapel = (mata_pelajaran || mapel || '').trim();
   const finalPengalaman = (pengalaman || '3 Tahun').trim();
   const finalStatus = (status || 'Aktif').trim();
+  const finalTanggal = (tanggalBergabung || created_at || '').trim();
 
   if (!finalNama || !finalMapel) {
     return res.status(400).json({
@@ -111,10 +116,15 @@ router.post('/', async (req, res) => {
       });
     }
 
-    const [result] = await pool.query(
-      'INSERT INTO guru (kode_guru, nama_guru, mata_pelajaran, pengalaman, status) VALUES (?, ?, ?, ?, ?)',
-      [kode, finalNama, finalMapel, finalPengalaman, finalStatus]
-    );
+    let insertQuery = 'INSERT INTO guru (kode_guru, nama_guru, mata_pelajaran, pengalaman, status) VALUES (?, ?, ?, ?, ?)';
+    let insertParams = [kode, finalNama, finalMapel, finalPengalaman, finalStatus];
+
+    if (finalTanggal) {
+      insertQuery = 'INSERT INTO guru (kode_guru, nama_guru, mata_pelajaran, pengalaman, status, created_at) VALUES (?, ?, ?, ?, ?, ?)';
+      insertParams = [kode, finalNama, finalMapel, finalPengalaman, finalStatus, `${finalTanggal} 08:00:00`];
+    }
+
+    const [result] = await pool.query(insertQuery, insertParams);
 
     const [newRow] = await pool.query('SELECT * FROM guru WHERE id = ?', [result.insertId]);
 
@@ -136,12 +146,13 @@ router.post('/', async (req, res) => {
 // 4. PUT /api/guru/:id - Perbarui data guru
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
-  const { nama, nama_guru, mapel, mata_pelajaran, pengalaman, status } = req.body;
+  const { nama, nama_guru, mapel, mata_pelajaran, pengalaman, status, tanggalBergabung, created_at } = req.body;
 
   const finalNama = (nama_guru || nama || '').trim();
   const finalMapel = (mata_pelajaran || mapel || '').trim();
   const finalPengalaman = (pengalaman || '3 Tahun').trim();
   const finalStatus = (status || 'Aktif').trim();
+  const finalTanggal = (tanggalBergabung || created_at || '').trim();
 
   if (!finalNama || !finalMapel) {
     return res.status(400).json({
@@ -151,10 +162,15 @@ router.put('/:id', async (req, res) => {
   }
 
   try {
-    const [result] = await pool.query(
-      'UPDATE guru SET nama_guru = ?, mata_pelajaran = ?, pengalaman = ?, status = ? WHERE kode_guru = ? OR id = ?',
-      [finalNama, finalMapel, finalPengalaman, finalStatus, id, id]
-    );
+    let updateQuery = 'UPDATE guru SET nama_guru = ?, mata_pelajaran = ?, pengalaman = ?, status = ? WHERE kode_guru = ? OR id = ?';
+    let updateParams = [finalNama, finalMapel, finalPengalaman, finalStatus, id, id];
+
+    if (finalTanggal) {
+      updateQuery = 'UPDATE guru SET nama_guru = ?, mata_pelajaran = ?, pengalaman = ?, status = ?, created_at = ? WHERE kode_guru = ? OR id = ?';
+      updateParams = [finalNama, finalMapel, finalPengalaman, finalStatus, `${finalTanggal} 08:00:00`, id, id];
+    }
+
+    const [result] = await pool.query(updateQuery, updateParams);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({

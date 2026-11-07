@@ -50,7 +50,8 @@ export async function createGuruInDb(guruData) {
         nama_guru: guruData.nama,
         mata_pelajaran: guruData.mapel,
         pengalaman: guruData.pengalaman || '3 Tahun',
-        status: guruData.status || 'Aktif'
+        status: guruData.status || 'Aktif',
+        tanggalBergabung: guruData.tanggalBergabung
       })
     });
 
@@ -79,7 +80,8 @@ export async function updateGuruInDb(id, guruData) {
         nama_guru: guruData.nama,
         mata_pelajaran: guruData.mapel,
         pengalaman: guruData.pengalaman,
-        status: guruData.status
+        status: guruData.status,
+        tanggalBergabung: guruData.tanggalBergabung
       })
     });
 
