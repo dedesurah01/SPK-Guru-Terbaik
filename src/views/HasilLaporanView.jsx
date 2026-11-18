@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import * as XLSX from 'xlsx';
 import { 
   Printer, 
   Download, 
@@ -20,6 +21,7 @@ import { useSpk } from '../context/SpkContext';
 export default function HasilLaporanView({ onNavigate }) {
   const { sawResults, kriteriaList, guruList, tanggalPenilaian } = useSpk();
   const [downloadSuccess, setDownloadSuccess] = useState(false);
+  const [excelSuccess, setExcelSuccess] = useState(false);
 
   // If SAW calculations are invalid / data incomplete
   if (!sawResults.isValid) {
@@ -72,6 +74,82 @@ export default function HasilLaporanView({ onNavigate }) {
   // Print Report Handler
   const handlePrint = () => {
     window.print();
+  };
+
+  // Export Microsoft Excel (.xlsx) Handler — Rekap Multi-Sheet Lengkap
+  const handleExportExcel = () => {
+    try {
+      const wb = XLSX.utils.book_new();
+
+      // 1. Sheet Peringkat Rekomendasi Guru
+      const sheetPeringkatData = sortedRankings.map((r) => ({
+        'Peringkat': r.rank,
+        'ID Guru': r.guruId,
+        'Nama Guru': r.guruNama,
+        'Mata Pelajaran': r.guruMapel,
+        'Nilai Preferensi (Vi)': Number(r.preferenceScore.toFixed(4)),
+        'Status Rekomendasi': r.recommendationStatus
+      }));
+      const wsPeringkat = XLSX.utils.json_to_sheet(sheetPeringkatData);
+      XLSX.utils.book_append_sheet(wb, wsPeringkat, 'Peringkat Guru');
+
+      // 2. Sheet Matriks Keputusan (X)
+      if (sawResults.decisionMatrix && sawResults.decisionMatrix.length > 0) {
+        const sheetMatrixData = sawResults.decisionMatrix.map((row) => {
+          const item = {
+            'ID Guru': row.guruId,
+            'Nama Guru': row.guruNama,
+            'Mata Pelajaran': row.guruMapel
+          };
+          kriteriaList.forEach((k) => {
+            item[`${k.kode} (${k.nama})`] = row.values[k.kode] ?? 0;
+          });
+          return item;
+        });
+        const wsMatrix = XLSX.utils.json_to_sheet(sheetMatrixData);
+        XLSX.utils.book_append_sheet(wb, wsMatrix, 'Matriks Keputusan (X)');
+      }
+
+      // 3. Sheet Matriks Normalisasi (R)
+      if (sawResults.normalizedMatrix && sawResults.normalizedMatrix.length > 0) {
+        const sheetNormData = sawResults.normalizedMatrix.map((row) => {
+          const item = {
+            'ID Guru': row.guruId,
+            'Nama Guru': row.guruNama,
+            'Mata Pelajaran': row.guruMapel
+          };
+          kriteriaList.forEach((k) => {
+            item[`${k.kode} (${k.nama})`] = row.normalizedValues[k.kode]?.normalized ?? 0;
+          });
+          return item;
+        });
+        const wsNorm = XLSX.utils.json_to_sheet(sheetNormData);
+        XLSX.utils.book_append_sheet(wb, wsNorm, 'Matriks Normalisasi (R)');
+      }
+
+      // 4. Sheet Kriteria & Bobot
+      const sheetKriteriaData = kriteriaList.map((k) => ({
+        'Kode': k.kode,
+        'Nama Kriteria': k.nama,
+        'Bobot Awal (%)': k.bobot,
+        'Bobot Normal (wj)': k.normalizedWeight,
+        'Persentase': k.percentNormalized,
+        'Jenis Atribut': k.jenis,
+        'Keterangan': k.keterangan || ''
+      }));
+      const wsKriteria = XLSX.utils.json_to_sheet(sheetKriteriaData);
+      XLSX.utils.book_append_sheet(wb, wsKriteria, 'Kriteria & Bobot');
+
+      // Download file .xlsx
+      const dateStr = tanggalPenilaian ? tanggalPenilaian.replace(/-/g, '') : new Date().toISOString().slice(0, 10).replace(/-/g, '');
+      XLSX.writeFile(wb, `Laporan_SPK_Guru_Terbaik_Nurul_Fikri_${dateStr}.xlsx`);
+
+      setExcelSuccess(true);
+      setTimeout(() => setExcelSuccess(false), 3500);
+    } catch (err) {
+      console.error('Gagal mengekspor file Excel:', err);
+      alert('Gagal mengekspor file Excel. Silakan coba lagi.');
+    }
   };
 
   // Export CSV Handler
@@ -144,7 +222,22 @@ export default function HasilLaporanView({ onNavigate }) {
             </div>
           </div>
 
-          <div className="toolbar-right">
+          <div className="toolbar-right" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <button
+              onClick={handleExportExcel}
+              className="btn btn-secondary btn-icon"
+              style={{
+                borderColor: '#10B981',
+                color: '#065F46',
+                backgroundColor: '#ECFDF5',
+                fontWeight: 600
+              }}
+              title="Unduh seluruh rekapitulasi data & matriks format Microsoft Excel (.xlsx)"
+            >
+              <FileSpreadsheet size={16} color="#059669" />
+              <span>{excelSuccess ? 'Excel Berhasil Diunduh!' : 'Ekspor Excel (.xlsx)'}</span>
+            </button>
+
             <button
               onClick={handleExportCSV}
               className="btn btn-secondary btn-icon"
