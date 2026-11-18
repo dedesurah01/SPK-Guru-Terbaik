@@ -54,6 +54,19 @@ export default function PenilaianGuruView({ onNavigate }) {
     setTimeout(() => setToastMessage(null), 3500);
   };
 
+  // Handle Perubahan Tanggal Evaluasi
+  const handleDateChange = async (e) => {
+    const newDate = e.target.value;
+    if (!newDate || newDate === tanggalPenilaian) return;
+    try {
+      await setTanggalPenilaian(newDate);
+      const formatted = new Date(newDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+      showToast(`Tanggal evaluasi diubah ke ${formatted}. Nilai tanggal sebelumnya tersimpan otomatis.`);
+    } catch (err) {
+      showToast('Gagal mengubah tanggal evaluasi', 'error');
+    }
+  };
+
   // Filtered Teachers
   const filteredGuru = useMemo(() => {
     return guruList.filter((guru) => {
@@ -319,7 +332,7 @@ export default function PenilaianGuruView({ onNavigate }) {
               <input
                 type="date"
                 value={tanggalPenilaian}
-                onChange={(e) => setTanggalPenilaian(e.target.value)}
+                onChange={handleDateChange}
                 className="form-input"
                 style={{ padding: '4px 8px', fontSize: '13px', width: 'auto', border: '1px solid #CBD5E1' }}
               />

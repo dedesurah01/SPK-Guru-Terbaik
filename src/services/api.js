@@ -118,10 +118,14 @@ export async function deleteGuruFromDb(id) {
 
 /**
  * Mengambil data nilai penilaian dan tanggal evaluasi dari MySQL
+ * @param {string} [tanggal] - Opsional: filter berdasarkan tanggal YYYY-MM-DD
  */
-export async function fetchPenilaianFromDb() {
+export async function fetchPenilaianFromDb(tanggal) {
   try {
-    const res = await fetch(`${API_BASE_URL}/penilaian`);
+    const url = tanggal 
+      ? `${API_BASE_URL}/penilaian?tanggal=${encodeURIComponent(tanggal)}` 
+      : `${API_BASE_URL}/penilaian`;
+    const res = await fetch(url);
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
@@ -134,9 +138,12 @@ export async function fetchPenilaianFromDb() {
 }
 
 /**
- * Menyimpan nilai seorang guru ke database MySQL
+ * Menyimpan nilai seorang guru ke database MySQL untuk tanggal tertentu
+ * @param {string} kodeGuru - ID / Kode Guru
+ * @param {Object} scores - Peta nilai kriteria { C1: 80, C2: 90, ... }
+ * @param {string} [tanggal] - Tanggal evaluasi (opsional, default aktif)
  */
-export async function saveGuruScoresInDb(kodeGuru, scores) {
+export async function saveGuruScoresInDb(kodeGuru, scores, tanggal) {
   try {
     const res = await fetch(`${API_BASE_URL}/penilaian`, {
       method: 'POST',
@@ -145,7 +152,8 @@ export async function saveGuruScoresInDb(kodeGuru, scores) {
       },
       body: JSON.stringify({
         kode_guru: kodeGuru,
-        scores
+        scores,
+        tanggal_penilaian: tanggal
       })
     });
 
@@ -156,6 +164,35 @@ export async function saveGuruScoresInDb(kodeGuru, scores) {
     return result;
   } catch (error) {
     console.error(`[API] Error saveGuruScoresInDb (${kodeGuru}):`, error);
+    throw error;
+  }
+}
+
+/**
+ * Menyimpan seluruh matriks penilaian (batch) ke MySQL untuk tanggal tertentu
+ * @param {Object} penilaianMap - Peta seluruh penilaian { [guruId]: { [kriteria]: score } }
+ * @param {string} [tanggal] - Tanggal evaluasi
+ */
+export async function saveBatchPenilaianInDb(penilaianMap, tanggal) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/penilaian/batch`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        penilaianMap,
+        tanggal_penilaian: tanggal
+      })
+    });
+
+    const result = await res.json();
+    if (!res.ok) {
+      throw new Error(result.message || 'Gagal menyimpan batch penilaian ke database');
+    }
+    return result;
+  } catch (error) {
+    console.error('[API] Error saveBatchPenilaianInDb:', error);
     throw error;
   }
 }
@@ -185,11 +222,14 @@ export async function saveTanggalPenilaianInDb(tanggal) {
 }
 
 /**
- * Menghapus nilai guru dari database MySQL
+ * Menghapus nilai guru dari database MySQL (opsional filter per tanggal)
  */
-export async function deleteGuruScoresFromDb(kodeGuru) {
+export async function deleteGuruScoresFromDb(kodeGuru, tanggal) {
   try {
-    const res = await fetch(`${API_BASE_URL}/penilaian/${encodeURIComponent(kodeGuru)}`, {
+    const url = tanggal
+      ? `${API_BASE_URL}/penilaian/${encodeURIComponent(kodeGuru)}?tanggal=${encodeURIComponent(tanggal)}`
+      : `${API_BASE_URL}/penilaian/${encodeURIComponent(kodeGuru)}`;
+    const res = await fetch(url, {
       method: 'DELETE'
     });
     return await res.json();

@@ -19,14 +19,15 @@ CREATE TABLE IF NOT EXISTS guru (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Tabel: penilaian (Skor evaluasi guru per kriteria C1 - C8)
+-- Tabel: penilaian (Skor evaluasi guru per kriteria C1 - C8 per tanggal evaluasi)
 CREATE TABLE IF NOT EXISTS penilaian (
   id INT AUTO_INCREMENT PRIMARY KEY,
   kode_guru VARCHAR(50) NOT NULL,
   kode_kriteria VARCHAR(20) NOT NULL,
+  tanggal_penilaian VARCHAR(20) NOT NULL DEFAULT '2026-11-06',
   nilai DECIMAL(5,2) NOT NULL DEFAULT 0,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  UNIQUE KEY uq_guru_kriteria (kode_guru, kode_kriteria)
+  UNIQUE KEY uq_guru_kriteria_tanggal (kode_guru, kode_kriteria, tanggal_penilaian)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Tabel: pengaturan (Pengaturan sistem seperti tanggal_penilaian)

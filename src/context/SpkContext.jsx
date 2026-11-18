@@ -9,6 +9,7 @@ import {
   deleteGuruFromDb,
   fetchPenilaianFromDb,
   saveGuruScoresInDb,
+  saveBatchPenilaianInDb,
   saveTanggalPenilaianInDb,
   deleteGuruScoresFromDb
 } from '../services/api';
@@ -19,6 +20,7 @@ const STORAGE_KEY_GURU = 'spk_nf_guru_master_v2';
 const STORAGE_KEY_KRITERIA = 'spk_nf_kriteria_master';
 const STORAGE_KEY_PENILAIAN = 'spk_nf_penilaian_master_v2';
 const STORAGE_KEY_TANGGAL_PENILAIAN = 'spk_nf_tanggal_penilaian_v2';
+const STORAGE_KEY_PENILAIAN_BY_DATE = 'spk_nf_penilaian_by_date_v2';
 
 export function SpkProvider({ children }) {
   // Initialize Guru Data
@@ -38,13 +40,28 @@ export function SpkProvider({ children }) {
     }
   });
 
-  // Initialize Evaluation Date (Default: Hari Ini)
+  // Initialize Evaluation Date (Default: 2026-11-06 atau yang tersimpan)
   const [tanggalPenilaian, setTanggalPenilaian] = useState(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY_TANGGAL_PENILAIAN);
-      return saved || new Date().toISOString().split('T')[0];
+      return saved || '2026-11-06';
     } catch {
-      return new Date().toISOString().split('T')[0];
+      return '2026-11-06';
+    }
+  });
+
+  // Multi-date Penilaian History Map: { [tanggal]: { [guruId]: { [kriteriaKode]: number } } }
+  const [penilaianHistory, setPenilaianHistory] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_PENILAIAN_BY_DATE);
+      if (saved) return JSON.parse(saved);
+      const legacy = localStorage.getItem(STORAGE_KEY_PENILAIAN);
+      const parsedLegacy = legacy ? JSON.parse(legacy) : NILAI_SIMULASI_DEFAULT;
+      return {
+        '2026-11-06': parsedLegacy
+      };
+    } catch {
+      return { '2026-11-06': NILAI_SIMULASI_DEFAULT };
     }
   });
 
@@ -59,10 +76,19 @@ export function SpkProvider({ children }) {
   });
 
   // Initialize Penilaian Map: { [guruId]: { [kriteriaKode]: number } }
+  // Otomatis disesuaikan dengan tanggal aktif: jika tanggal belum pernah dinilai, nilai kosong ({})
   const [penilaianMap, setPenilaianMap] = useState(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY_PENILAIAN);
-      return saved ? JSON.parse(saved) : NILAI_SIMULASI_DEFAULT;
+      const savedDate = localStorage.getItem(STORAGE_KEY_TANGGAL_PENILAIAN) || '2026-11-06';
+      const historyStr = localStorage.getItem(STORAGE_KEY_PENILAIAN_BY_DATE);
+      if (historyStr) {
+        const history = JSON.parse(historyStr);
+        if (history && history[savedDate]) {
+          return history[savedDate];
+        }
+      }
+      const savedSingle = localStorage.getItem(STORAGE_KEY_PENILAIAN);
+      return savedSingle ? JSON.parse(savedSingle) : (savedDate === '2026-11-06' ? NILAI_SIMULASI_DEFAULT : {});
     } catch {
       return NILAI_SIMULASI_DEFAULT;
     }
@@ -73,7 +99,7 @@ export function SpkProvider({ children }) {
   const [isLoadingGuru, setIsLoadingGuru] = useState(false);
 
   // Fetch Guru & Penilaian dari MySQL Backend
-  const refreshGuruFromDb = useCallback(async () => {
+  const refreshGuruFromDb = useCallback(async (targetDate) => {
     setIsLoadingGuru(true);
     try {
       const isOnline = await checkApiHealth();
@@ -84,33 +110,23 @@ export function SpkProvider({ children }) {
         setGuruList(dataFromDb);
 
         // 2. Ambil data penilaian & tanggal evaluasi dari MySQL
-        const { penilaianMap: dbPenilaian, tanggalPenilaian: dbTanggal } = await fetchPenilaianFromDb();
+        const { penilaianMap: dbPenilaian, tanggalPenilaian: dbTanggal } = await fetchPenilaianFromDb(targetDate);
         
-        const hasDbScores = dbPenilaian && Object.keys(dbPenilaian).length > 0;
-        if (hasDbScores) {
-          setPenilaianMap(dbPenilaian);
-          localStorage.setItem(STORAGE_KEY_PENILAIAN, JSON.stringify(dbPenilaian));
-        } else {
-          // Jika DB penilaian masih kosong tapi di localStorage sudah ada nilai, migrasikan ke MySQL!
-          const localScores = localStorage.getItem(STORAGE_KEY_PENILAIAN);
-          if (localScores) {
-            try {
-              const parsedLocal = JSON.parse(localScores);
-              if (parsedLocal && Object.keys(parsedLocal).length > 0) {
-                for (const [guruId, scores] of Object.entries(parsedLocal)) {
-                  await saveGuruScoresInDb(guruId, scores);
-                }
-              }
-            } catch (e) {
-              console.warn('Gagal migrasi nilai lokal ke MySQL:', e);
-            }
-          }
-        }
-
+        const activeDate = targetDate || dbTanggal || '2026-11-06';
         if (dbTanggal) {
           setTanggalPenilaian(dbTanggal);
           localStorage.setItem(STORAGE_KEY_TANGGAL_PENILAIAN, dbTanggal);
         }
+
+        const loadedScores = dbPenilaian || {};
+        setPenilaianMap(loadedScores);
+        localStorage.setItem(STORAGE_KEY_PENILAIAN, JSON.stringify(loadedScores));
+
+        setPenilaianHistory((prev) => {
+          const updated = { ...prev, [activeDate]: loadedScores };
+          localStorage.setItem(STORAGE_KEY_PENILAIAN_BY_DATE, JSON.stringify(updated));
+          return updated;
+        });
 
         return { success: true, count: dataFromDb.length };
       } else {
@@ -236,21 +252,44 @@ export function SpkProvider({ children }) {
     setKriteriaList(KRITERIA_SIMULASI);
   };
 
-  // Operations: Penilaian Guru (Sinkron ke MySQL & Local)
+  // Operations: Penilaian Guru (Sinkron ke MySQL & Local per Tanggal Evaluasi)
   const setGuruScores = async (guruId, scores) => {
-    setPenilaianMap((prev) => ({
-      ...prev,
-      [guruId]: {
-        ...(prev[guruId] || {}),
-        ...scores
+    const updatedGuruScores = {
+      ...(penilaianMap[guruId] || {}),
+      ...scores
+    };
+    const nextMap = {
+      ...penilaianMap,
+      [guruId]: updatedGuruScores
+    };
+
+    setPenilaianMap(nextMap);
+    try {
+      localStorage.setItem(STORAGE_KEY_PENILAIAN, JSON.stringify(nextMap));
+    } catch (e) {
+      console.warn('Gagal menyimpan penilaian aktif ke localStorage:', e);
+    }
+
+    // Perbarui riwayat untuk tanggal aktif
+    setPenilaianHistory((prev) => {
+      const updated = {
+        ...prev,
+        [tanggalPenilaian]: nextMap
+      };
+      try {
+        localStorage.setItem(STORAGE_KEY_PENILAIAN_BY_DATE, JSON.stringify(updated));
+      } catch (e) {
+        console.warn('Gagal menyimpan riwayat tanggal ke localStorage:', e);
       }
-    }));
+      return updated;
+    });
 
     if (isDbConnected) {
       try {
-        await saveGuruScoresInDb(guruId, scores);
+        await saveGuruScoresInDb(guruId, scores, tanggalPenilaian);
       } catch (err) {
         console.warn('Gagal menyimpan nilai guru ke MySQL:', err);
+        throw err;
       }
     }
   };
@@ -263,15 +302,85 @@ export function SpkProvider({ children }) {
     await setGuruScores(guruId, defaultScores);
   };
 
-  const updateTanggalPenilaian = (newDate) => {
+  // Mengubah tanggal evaluasi:
+  // - Nilai tanggal sebelumnya otomatis tersimpan
+  // - Nilai untuk tanggal baru otomatis kosong ({}) jika belum pernah diinput
+  const updateTanggalPenilaian = async (newDate) => {
+    if (!newDate || newDate === tanggalPenilaian) return;
+
+    // 1. Simpan nilai tanggal saat ini ke histori lokal
+    const currentScores = { ...penilaianMap };
+    setPenilaianHistory((prev) => {
+      const updated = {
+        ...prev,
+        [tanggalPenilaian]: currentScores
+      };
+      try {
+        localStorage.setItem(STORAGE_KEY_PENILAIAN_BY_DATE, JSON.stringify(updated));
+      } catch (e) {
+        console.warn(e);
+      }
+      return updated;
+    });
+
+    // 2. Set tanggal penilaian aktif yang baru
     setTanggalPenilaian(newDate);
+    localStorage.setItem(STORAGE_KEY_TANGGAL_PENILAIAN, newDate);
+
+    // 3. Muat nilai untuk tanggal baru
     if (isDbConnected) {
-      saveTanggalPenilaianInDb(newDate).catch(console.warn);
+      try {
+        const result = await saveTanggalPenilaianInDb(newDate);
+        const newMap = result?.data?.penilaianMap || {};
+        setPenilaianMap(newMap);
+        localStorage.setItem(STORAGE_KEY_PENILAIAN, JSON.stringify(newMap));
+
+        setPenilaianHistory((prev) => {
+          const updated = { ...prev, [newDate]: newMap };
+          try {
+            localStorage.setItem(STORAGE_KEY_PENILAIAN_BY_DATE, JSON.stringify(updated));
+          } catch (e) {
+            console.warn(e);
+          }
+          return updated;
+        });
+      } catch (err) {
+        console.warn('Gagal mengambil data penilaian tanggal baru dari MySQL:', err);
+        const fallbackMap = penilaianHistory[newDate] || {};
+        setPenilaianMap(fallbackMap);
+        localStorage.setItem(STORAGE_KEY_PENILAIAN, JSON.stringify(fallbackMap));
+      }
+    } else {
+      const fallbackMap = penilaianHistory[newDate] || {};
+      setPenilaianMap(fallbackMap);
+      localStorage.setItem(STORAGE_KEY_PENILAIAN, JSON.stringify(fallbackMap));
     }
   };
 
-  const resetPenilaianToDefault = () => {
+  const resetPenilaianToDefault = async () => {
     setPenilaianMap(NILAI_SIMULASI_DEFAULT);
+    localStorage.setItem(STORAGE_KEY_PENILAIAN, JSON.stringify(NILAI_SIMULASI_DEFAULT));
+
+    setPenilaianHistory((prev) => {
+      const updated = {
+        ...prev,
+        [tanggalPenilaian]: NILAI_SIMULASI_DEFAULT
+      };
+      try {
+        localStorage.setItem(STORAGE_KEY_PENILAIAN_BY_DATE, JSON.stringify(updated));
+      } catch (e) {
+        console.warn(e);
+      }
+      return updated;
+    });
+
+    if (isDbConnected) {
+      try {
+        await saveBatchPenilaianInDb(NILAI_SIMULASI_DEFAULT, tanggalPenilaian);
+      } catch (err) {
+        console.warn('Gagal reset nilai ke database MySQL:', err);
+      }
+    }
   };
 
   // Derived calculations: Total Bobot & Normalisasi Bobot (w_j)

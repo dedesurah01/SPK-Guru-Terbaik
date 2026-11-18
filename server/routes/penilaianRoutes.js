@@ -3,11 +3,28 @@ import pool from '../db.js';
 
 const router = express.Router();
 
-// 1. GET /api/penilaian - Ambil semua nilai penilaian dan tanggal evaluasi dari MySQL
+// Helper untuk mendapatkan tanggal aktif saat ini
+async function getActiveTanggal() {
+  const [settingRows] = await pool.query(
+    'SELECT nilai FROM pengaturan WHERE kunci = ? LIMIT 1',
+    ['tanggal_penilaian']
+  );
+  return settingRows[0]?.nilai || new Date().toISOString().split('T')[0];
+}
+
+// 1. GET /api/penilaian - Ambil nilai penilaian berdasarkan tanggal (query ?tanggal=YYYY-MM-DD)
 router.get('/', async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT kode_guru, kode_kriteria, nilai FROM penilaian');
-    
+    let targetTanggal = req.query.tanggal;
+    if (!targetTanggal) {
+      targetTanggal = await getActiveTanggal();
+    }
+
+    const [rows] = await pool.query(
+      'SELECT kode_guru, kode_kriteria, nilai FROM penilaian WHERE tanggal_penilaian = ?',
+      [targetTanggal]
+    );
+
     const penilaianMap = {};
     rows.forEach((r) => {
       if (!penilaianMap[r.kode_guru]) {
@@ -16,21 +33,12 @@ router.get('/', async (req, res) => {
       penilaianMap[r.kode_guru][r.kode_kriteria] = Number(r.nilai);
     });
 
-    // Ambil juga tanggal_penilaian jika ada
-    let tanggalPenilaian = null;
-    const [settingRows] = await pool.query(
-      'SELECT nilai FROM pengaturan WHERE kunci = ? LIMIT 1',
-      ['tanggal_penilaian']
-    );
-    if (settingRows.length > 0) {
-      tanggalPenilaian = settingRows[0].nilai;
-    }
-
     res.json({
       success: true,
       data: {
         penilaianMap,
-        tanggalPenilaian
+        tanggalPenilaian: targetTanggal,
+        totalTersimpan: rows.length
       }
     });
   } catch (error) {
@@ -43,10 +51,35 @@ router.get('/', async (req, res) => {
   }
 });
 
-// 2. POST /api/penilaian - Simpan / perbarui nilai seorang guru
+// 2. GET /api/penilaian/history - Ambil semua riwayat tanggal yang pernah dinilai
+router.get('/history', async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      'SELECT DISTINCT tanggal_penilaian, COUNT(DISTINCT kode_guru) as total_guru FROM penilaian GROUP BY tanggal_penilaian ORDER BY tanggal_penilaian DESC'
+    );
+    res.json({
+      success: true,
+      data: rows
+    });
+  } catch (error) {
+    console.error('Error GET /api/penilaian/history:', error.message);
+    res.status(500).json({
+      success: false,
+      message: 'Gagal mengambil riwayat penilaian',
+      error: error.message
+    });
+  }
+});
+
+// 3. POST /api/penilaian - Simpan / perbarui nilai seorang guru untuk tanggal tertentu
 router.post('/', async (req, res) => {
-  const { kode_guru, guru_id, scores } = req.body;
+  const { kode_guru, guru_id, scores, tanggal_penilaian, tanggal } = req.body;
   const targetId = (kode_guru || guru_id || '').trim();
+
+  let targetTanggal = (tanggal_penilaian || tanggal || '').trim();
+  if (!targetTanggal) {
+    targetTanggal = await getActiveTanggal();
+  }
 
   if (!targetId || !scores || typeof scores !== 'object') {
     return res.status(400).json({
@@ -61,17 +94,17 @@ router.post('/', async (req, res) => {
       const numericVal = Number(nilai);
       if (!isNaN(numericVal)) {
         await pool.query(
-          `INSERT INTO penilaian (kode_guru, kode_kriteria, nilai) 
-           VALUES (?, ?, ?) 
+          `INSERT INTO penilaian (kode_guru, kode_kriteria, tanggal_penilaian, nilai) 
+           VALUES (?, ?, ?, ?) 
            ON DUPLICATE KEY UPDATE nilai = VALUES(nilai)`,
-          [targetId, kodeKriteria, numericVal]
+          [targetId, kodeKriteria, targetTanggal, numericVal]
         );
       }
     }
 
     res.json({
       success: true,
-      message: `Nilai guru '${targetId}' berhasil disimpan ke MySQL`
+      message: `Nilai guru '${targetId}' untuk tanggal '${targetTanggal}' berhasil disimpan ke MySQL`
     });
   } catch (error) {
     console.error('Error POST /api/penilaian:', error.message);
@@ -83,9 +116,14 @@ router.post('/', async (req, res) => {
   }
 });
 
-// 3. POST /api/penilaian/batch - Simpan seluruh matriks penilaian sekaligus
+// 4. POST /api/penilaian/batch - Simpan seluruh matriks penilaian untuk tanggal tertentu
 router.post('/batch', async (req, res) => {
-  const { penilaianMap } = req.body;
+  const { penilaianMap, tanggal_penilaian, tanggal } = req.body;
+
+  let targetTanggal = (tanggal_penilaian || tanggal || '').trim();
+  if (!targetTanggal) {
+    targetTanggal = await getActiveTanggal();
+  }
 
   if (!penilaianMap || typeof penilaianMap !== 'object') {
     return res.status(400).json({
@@ -101,10 +139,10 @@ router.post('/batch', async (req, res) => {
           const numericVal = Number(nilai);
           if (!isNaN(numericVal)) {
             await pool.query(
-              `INSERT INTO penilaian (kode_guru, kode_kriteria, nilai) 
-               VALUES (?, ?, ?) 
+              `INSERT INTO penilaian (kode_guru, kode_kriteria, tanggal_penilaian, nilai) 
+               VALUES (?, ?, ?, ?) 
                ON DUPLICATE KEY UPDATE nilai = VALUES(nilai)`,
-              [kodeGuru, kodeKriteria, numericVal]
+              [kodeGuru, kodeKriteria, targetTanggal, numericVal]
             );
           }
         }
@@ -113,7 +151,7 @@ router.post('/batch', async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Seluruh data penilaian berhasil disinkronkan ke MySQL'
+      message: `Seluruh data penilaian untuk tanggal '${targetTanggal}' berhasil disimpan ke MySQL`
     });
   } catch (error) {
     console.error('Error POST /api/penilaian/batch:', error.message);
@@ -125,11 +163,73 @@ router.post('/batch', async (req, res) => {
   }
 });
 
-// 4. DELETE /api/penilaian/:id - Hapus seluruh nilai seorang guru
+// 5. POST /api/penilaian/tanggal - Ubah tanggal evaluasi dan ambil data penilaian untuk tanggal baru
+router.post('/tanggal', async (req, res) => {
+  const { tanggal } = req.body;
+  if (!tanggal) {
+    return res.status(400).json({
+      success: false,
+      message: 'Tanggal evaluasi wajib diisi'
+    });
+  }
+
+  try {
+    // 1. Simpan tanggal aktif di pengaturan
+    await pool.query(
+      `INSERT INTO pengaturan (kunci, nilai) 
+       VALUES ('tanggal_penilaian', ?) 
+       ON DUPLICATE KEY UPDATE nilai = VALUES(nilai)`,
+      [tanggal]
+    );
+
+    // 2. Ambil nilai yang sudah ada untuk tanggal baru ini
+    const [rows] = await pool.query(
+      'SELECT kode_guru, kode_kriteria, nilai FROM penilaian WHERE tanggal_penilaian = ?',
+      [tanggal]
+    );
+
+    const penilaianMap = {};
+    rows.forEach((r) => {
+      if (!penilaianMap[r.kode_guru]) {
+        penilaianMap[r.kode_guru] = {};
+      }
+      penilaianMap[r.kode_guru][r.kode_kriteria] = Number(r.nilai);
+    });
+
+    res.json({
+      success: true,
+      message: `Tanggal evaluasi diubah ke '${tanggal}'. Nilai tanggal sebelumnya tetap aman tersimpan.`,
+      data: {
+        tanggalPenilaian: tanggal,
+        penilaianMap,
+        totalTersimpan: rows.length
+      }
+    });
+  } catch (error) {
+    console.error('Error POST /api/penilaian/tanggal:', error.message);
+    res.status(500).json({
+      success: false,
+      message: 'Gagal mengubah tanggal evaluasi',
+      error: error.message
+    });
+  }
+});
+
+// 6. DELETE /api/penilaian/:id - Hapus nilai seorang guru
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
+  const { tanggal } = req.query;
+
   try {
-    await pool.query('DELETE FROM penilaian WHERE kode_guru = ?', [id]);
+    if (tanggal) {
+      await pool.query(
+        'DELETE FROM penilaian WHERE kode_guru = ? AND tanggal_penilaian = ?',
+        [id, tanggal]
+      );
+    } else {
+      await pool.query('DELETE FROM penilaian WHERE kode_guru = ?', [id]);
+    }
+
     res.json({
       success: true,
       message: `Nilai guru '${id}' berhasil dihapus dari database`
@@ -144,37 +244,4 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-// 5. POST /api/penilaian/tanggal - Simpan tanggal evaluasi ke database
-router.post('/tanggal', async (req, res) => {
-  const { tanggal } = req.body;
-  if (!tanggal) {
-    return res.status(400).json({
-      success: false,
-      message: 'Tanggal evaluasi wajib diisi'
-    });
-  }
-
-  try {
-    await pool.query(
-      `INSERT INTO pengaturan (kunci, nilai) 
-       VALUES ('tanggal_penilaian', ?) 
-       ON DUPLICATE KEY UPDATE nilai = VALUES(nilai)`,
-      [tanggal]
-    );
-
-    res.json({
-      success: true,
-      message: 'Tanggal evaluasi berhasil disimpan ke MySQL'
-    });
-  } catch (error) {
-    console.error('Error POST /api/penilaian/tanggal:', error.message);
-    res.status(500).json({
-      success: false,
-      message: 'Gagal menyimpan tanggal evaluasi',
-      error: error.message
-    });
-  }
-});
-
 export default router;
-
