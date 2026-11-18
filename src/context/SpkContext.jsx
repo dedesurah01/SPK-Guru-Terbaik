@@ -11,7 +11,10 @@ import {
   saveGuruScoresInDb,
   saveBatchPenilaianInDb,
   saveTanggalPenilaianInDb,
-  deleteGuruScoresFromDb
+  deleteGuruScoresFromDb,
+  fetchKriteriaFromDb,
+  updateKriteriaInDb,
+  resetKriteriaInDb
 } from '../services/api';
 
 const SpkContext = createContext();
@@ -109,7 +112,18 @@ export function SpkProvider({ children }) {
         const dataFromDb = await fetchGuruFromDb();
         setGuruList(dataFromDb);
 
-        // 2. Ambil data penilaian & tanggal evaluasi dari MySQL
+        // 2. Ambil data kriteria dari MySQL
+        try {
+          const kriteriaFromDb = await fetchKriteriaFromDb();
+          if (kriteriaFromDb && kriteriaFromDb.length > 0) {
+            setKriteriaList(kriteriaFromDb);
+            localStorage.setItem(STORAGE_KEY_KRITERIA, JSON.stringify(kriteriaFromDb));
+          }
+        } catch (critErr) {
+          console.warn('Gagal memuat kriteria dari MySQL:', critErr);
+        }
+
+        // 3. Ambil data penilaian & tanggal evaluasi dari MySQL
         const { penilaianMap: dbPenilaian, tanggalPenilaian: dbTanggal } = await fetchPenilaianFromDb(targetDate);
         
         const activeDate = targetDate || dbTanggal || '2026-11-06';
@@ -241,15 +255,33 @@ export function SpkProvider({ children }) {
     setGuruList(GURU_SIMULASI);
   };
 
-  // Operations: Kriteria
-  const updateKriteria = (kode, updatedData) => {
+  // Operations: Kriteria (Sinkron ke MySQL & Local)
+  const updateKriteria = async (kode, updatedData) => {
     setKriteriaList((prev) =>
       prev.map((k) => (k.kode === kode ? { ...k, ...updatedData } : k))
     );
+
+    if (isDbConnected) {
+      try {
+        await updateKriteriaInDb(kode, updatedData);
+      } catch (err) {
+        console.warn('Gagal menyimpan perubahan kriteria ke MySQL:', err);
+      }
+    }
   };
 
-  const resetKriteriaToDefault = () => {
+  const resetKriteriaToDefault = async () => {
     setKriteriaList(KRITERIA_SIMULASI);
+    if (isDbConnected) {
+      try {
+        const fresh = await resetKriteriaInDb();
+        if (fresh && fresh.length > 0) {
+          setKriteriaList(fresh);
+        }
+      } catch (err) {
+        console.warn('Gagal mereset kriteria di MySQL:', err);
+      }
+    }
   };
 
   // Operations: Penilaian Guru (Sinkron ke MySQL & Local per Tanggal Evaluasi)

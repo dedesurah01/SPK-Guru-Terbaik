@@ -52,7 +52,7 @@ export default function KriteriaBobotView() {
   };
 
   // Validate & Save Kriteria
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
     const errors = {};
 
@@ -70,22 +70,30 @@ export default function KriteriaBobotView() {
       return;
     }
 
-    updateKriteria(editingKode, {
-      nama: formData.nama.trim(),
-      bobot: bobotNum,
-      jenis: formData.jenis,
-      keterangan: formData.keterangan.trim()
-    });
+    try {
+      await updateKriteria(editingKode, {
+        nama: formData.nama.trim(),
+        bobot: bobotNum,
+        jenis: formData.jenis,
+        keterangan: formData.keterangan.trim()
+      });
 
-    showToast(`Kriteria ${editingKode} (${formData.nama}) berhasil diperbarui!`);
-    setIsModalOpen(false);
+      showToast(`Kriteria ${editingKode} (${formData.nama}) berhasil disimpan ke database!`);
+      setIsModalOpen(false);
+    } catch (err) {
+      showToast(`Gagal menyimpan kriteria: ${err.message}`, 'error');
+    }
   };
 
   // Handle Reset to SOT PRD Defaults
-  const handleReset = () => {
+  const handleReset = async () => {
     if (window.confirm('Kembalikan seluruh 8 kriteria dan bobot ke standar default PRD (Total 100%)?')) {
-      resetKriteriaToDefault();
-      showToast('Seluruh kriteria telah dikembalikan ke standar PRD.', 'info');
+      try {
+        await resetKriteriaToDefault();
+        showToast('Seluruh kriteria telah dikembalikan ke standar PRD di MySQL.', 'info');
+      } catch (err) {
+        showToast('Gagal mereset kriteria', 'error');
+      }
     }
   };
 

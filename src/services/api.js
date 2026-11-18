@@ -238,3 +238,69 @@ export async function deleteGuruScoresFromDb(kodeGuru, tanggal) {
   }
 }
 
+/**
+ * Mengambil seluruh data kriteria evaluasi dari database MySQL
+ */
+export async function fetchKriteriaFromDb() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/kriteria`);
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    const result = await res.json();
+    return result.data || [];
+  } catch (error) {
+    console.warn('[API] Gagal mengambil data kriteria dari MySQL backend:', error.message);
+    throw error;
+  }
+}
+
+/**
+ * Memperbarui data kriteria dan bobot di database MySQL
+ */
+export async function updateKriteriaInDb(kode, kriteriaData) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/kriteria/${encodeURIComponent(kode)}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        nama: kriteriaData.nama,
+        bobot: kriteriaData.bobot,
+        jenis: kriteriaData.jenis,
+        keterangan: kriteriaData.keterangan
+      })
+    });
+
+    const result = await res.json();
+    if (!res.ok) {
+      throw new Error(result.message || 'Gagal memperbarui kriteria di database');
+    }
+    return result.data;
+  } catch (error) {
+    console.error(`[API] Error updateKriteriaInDb (${kode}):`, error);
+    throw error;
+  }
+}
+
+/**
+ * Mereset seluruh kriteria dan bobot ke standar default PRD di database MySQL
+ */
+export async function resetKriteriaInDb() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/kriteria/reset`, {
+      method: 'POST'
+    });
+
+    const result = await res.json();
+    if (!res.ok) {
+      throw new Error(result.message || 'Gagal mereset kriteria di database');
+    }
+    return result.data;
+  } catch (error) {
+    console.error('[API] Error resetKriteriaInDb:', error);
+    throw error;
+  }
+}
+
