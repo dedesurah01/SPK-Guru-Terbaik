@@ -134,7 +134,7 @@ Modul ini mengelola 8 kriteria standar penilaian kinerja guru dan bobot masing-m
 Modul ini merupakan tempat pengisian nilai evaluasi kinerja masing-masing guru pada setiap kriteria.
 
 #### Skala Nilai:
-- Rentang nilai yang valid adalah **1 hingga 100**.
+- Rentang nilai yang valid adalah **0 hingga 100**.
 - Nilai di luar rentang atau format non-angka akan ditolak dengan pesan kesalahan otomatis.
 
 #### Cara Mengisi atau Mengubah Nilai Guru:
@@ -143,7 +143,7 @@ Modul ini merupakan tempat pengisian nilai evaluasi kinerja masing-masing guru p
    - Badge hijau **Lengkap (8/8)** jika semua kriteria sudah dinilai.
    - Badge kuning **Belum Lengkap** jika ada kriteria yang belum terisi.
 3. Klik tombol **Input / Edit Nilai** pada baris guru yang dipilih.
-4. Masukkan skor 1-100 untuk masing-masing kriteria C1 sampai C8.
+4. Masukkan skor 0-100 untuk masing-masing kriteria C1 sampai C8.
 5. Klik **Simpan Penilaian**.
 
 #### Fitur Bantuan Cepat:
@@ -199,7 +199,7 @@ Modul ini adalah keluaran akhir sistem yang menyajikan daftar peringkat resmi gu
 Untuk pelaksanaan penilaian kinerja guru rutin (misal semesteran atau tahunan), ikuti urutan berikut:
 1. **Langkah 1**: Perbarui daftar guru di modul **Data Guru** (tambahkan guru baru atau nonaktifkan guru yang sudah tidak mengajar).
 2. **Langkah 2**: Tinjau modul **Kriteria & Bobot** bersama tim akademik untuk memastikan bobot kriteria masih relevan.
-3. **Langkah 3**: Buka modul **Penilaian Guru**, masukkan evaluasi skor (1-100) dari hasil supervisi kelas, rekap absensi, dan kuisioner siswa.
+3. **Langkah 3**: Buka modul **Penilaian Guru**, masukkan evaluasi skor (0-100) dari hasil supervisi kelas, rekap absensi, dan kuisioner siswa.
 4. **Langkah 4**: Periksa modul **Perhitungan SAW** untuk memverifikasi tahapan normalisasi dan kalkulasi skor preferensi.
 5. **Langkah 5**: Buka modul **Hasil & Laporan**, cetak dokumen resmi untuk rapat pleno manajemen atau simpan arsip dalam bentuk PDF/CSV.
 
