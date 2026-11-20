@@ -15,7 +15,7 @@ Aplikasi web Sistem Pendukung Keputusan untuk membantu pengelola Bimbingan Belaj
 1. **Dashboard** — ringkasan jumlah guru, kriteria, status penilaian, hasil/peringkat ringkas.
 2. **Data Guru** — melihat, mencari, menambah, mengubah, dan menghapus data guru.
 3. **Kriteria dan Bobot** — mengelola nama kriteria, bobot, jenis benefit/cost, serta validasi total bobot.
-4. **Penilaian Guru** — memasukkan dan mengubah nilai guru per kriteria; validasi kelengkapan nilai.
+4. **Penilaian Guru** — memasukkan dan mengubah nilai guru per kriteria pada skala valid 0 hingga 100; validasi kelengkapan nilai.
 5. **Perhitungan SAW** — menampilkan matriks keputusan, normalisasi, bobot ternormalisasi, dan nilai preferensi.
 6. **Hasil dan Laporan** — peringkat guru, skor akhir, dan tampilan laporan yang dapat dicetak melalui fungsi cetak browser jika diimplementasikan.
 7. **Autentikasi** — login dan logout untuk pengguna.
@@ -36,7 +36,7 @@ Aplikasi web Sistem Pendukung Keputusan untuk membantu pengelola Bimbingan Belaj
 Bobot awal dinormalisasi dengan `w_j = bobot_j / total_bobot`. Total bobot harus lebih dari nol; validasi menyarankan total 100 agar mudah diaudit. Semua kriteria awal adalah benefit.
 
 ## 6. Aturan SAW
-- Bentuk matriks keputusan `X` dari nilai guru pada setiap kriteria.
+- Bentuk matriks keputusan `X` dari nilai guru pada setiap kriteria (rentang skala valid 0 - 100).
 - Untuk benefit: `r_ij = x_ij / max(x_j)`.
 - Untuk cost, bila kelak digunakan: `r_ij = min(x_j) / x_ij`, dengan validasi agar penyebut tidak nol.
 - Hitung preferensi: `V_i = Σ(w_j × r_ij)`.

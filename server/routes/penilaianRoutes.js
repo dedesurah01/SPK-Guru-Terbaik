@@ -92,7 +92,7 @@ router.post('/', async (req, res) => {
     const entries = Object.entries(scores);
     for (const [kodeKriteria, nilai] of entries) {
       const numericVal = Number(nilai);
-      if (!isNaN(numericVal)) {
+      if (!isNaN(numericVal) && numericVal >= 0 && numericVal <= 100) {
         await pool.query(
           `INSERT INTO penilaian (kode_guru, kode_kriteria, tanggal_penilaian, nilai) 
            VALUES (?, ?, ?, ?) 
@@ -137,7 +137,7 @@ router.post('/batch', async (req, res) => {
       if (scores && typeof scores === 'object') {
         for (const [kodeKriteria, nilai] of Object.entries(scores)) {
           const numericVal = Number(nilai);
-          if (!isNaN(numericVal)) {
+          if (!isNaN(numericVal) && numericVal >= 0 && numericVal <= 100) {
             await pool.query(
               `INSERT INTO penilaian (kode_guru, kode_kriteria, tanggal_penilaian, nilai) 
                VALUES (?, ?, ?, ?) 

@@ -45,7 +45,7 @@ export function calculateSaw(guruList, kriteriaList, penilaianMap) {
     const scores = penilaianMap[guru.id] || {};
     const missingKriteria = kriteriaList.filter((k) => {
       const val = scores[k.kode];
-      return val === undefined || val === null || val === '' || isNaN(val);
+      return val === undefined || val === null || val === '' || isNaN(val) || Number(val) < 0 || Number(val) > 100;
     });
     if (missingKriteria.length > 0) {
       incompleteGurus.push({

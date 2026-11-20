@@ -26,7 +26,7 @@ x_{m1} & x_{m2} & \dots & x_{mn}
 $$
 
 Di mana:
-- $x_{ij}$ adalah nilai kinerja alternatif guru ke-$i$ terhadap kriteria ke-$j$.
+- $x_{ij}$ adalah nilai kinerja alternatif guru ke-$i$ terhadap kriteria ke-$j$ pada skala terukur 0 hingga 100 ($0 \le x_{ij} \le 100$).
 
 ---
 

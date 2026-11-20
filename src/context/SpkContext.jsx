@@ -435,7 +435,7 @@ export function SpkProvider({ children }) {
     if (!scores) return false;
     return kriteriaList.length > 0 && kriteriaList.every((k) => {
       const val = scores[k.kode];
-      return val !== undefined && val !== null && val !== '' && !isNaN(val) && Number(val) >= 0;
+      return val !== undefined && val !== null && val !== '' && !isNaN(val) && Number(val) >= 0 && Number(val) <= 100;
     });
   };
 

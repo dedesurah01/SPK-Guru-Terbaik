@@ -64,6 +64,16 @@ router.put('/:kode', async (req, res) => {
       });
     }
 
+    if (bobot !== undefined) {
+      const parsedBobot = parseFloat(bobot);
+      if (isNaN(parsedBobot) || parsedBobot <= 0 || parsedBobot > 100) {
+        return res.status(400).json({
+          success: false,
+          message: 'Bobot kriteria harus berupa angka positif antara 1 hingga 100'
+        });
+      }
+    }
+
     const updatedNama = nama !== undefined ? nama : existing[0].nama;
     const updatedBobot = bobot !== undefined ? parseFloat(bobot) : existing[0].bobot;
     const updatedJenis = jenis !== undefined ? jenis : existing[0].jenis;

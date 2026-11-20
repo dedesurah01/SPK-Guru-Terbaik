@@ -11,7 +11,7 @@ Aplikasi ini mencakup 6 modul inti sesuai spesifikasi dokumen kebutuhan produk (
 1. **Dashboard Eksekutif**: Ringkasan metrik data guru, status kelengkapan penilaian, KPI kunci, serta kandidat teratas secara *real-time*.
 2. **Data Guru (Master Alternatif)**: Manajemen data guru lengkap dengan operasi CRUD (Tambah, Edit, Hapus dengan dialog konfirmasi, dan pencarian instan).
 3. **Kriteria dan Bobot**: Manajemen 8 kriteria standar Nurul Fikri (C1–C8) dengan validasi total bobot (100%), atribut *benefit*, dan opsi *reset*.
-4. **Penilaian Guru**: Antarmuka penilaian interaktif dengan validasi rentang skor 1–100, indikator kelengkapan penilaian, modal edit cepat, serta fitur *auto-fill* simulasi.
+4. **Penilaian Guru**: Antarmuka penilaian interaktif dengan validasi rentang skor 0–100, indikator kelengkapan penilaian, modal edit cepat, serta fitur *auto-fill* simulasi.
 5. **Perhitungan SAW**: Visualisasi transparan 4 tahapan matematis:
    - Tahap 1: Matriks Keputusan ($X$) & nilai ekstrem ($Max$/$Min$).
    - Tahap 2: Matriks Normalisasi ($R$) dengan rumus eksplisit per kriteria.
